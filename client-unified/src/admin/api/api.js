@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 // Create an Axios instance for the admin panel
 const adminApiClient = axios.create({
-  baseURL: 'https://cafe-chain-backend.onrender.com/api/admin', 
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}/admin`, 
   // baseURL: 'http://localhost:5000/api/admin', 
 });
 
