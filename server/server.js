@@ -29,7 +29,7 @@ connectDB();
 const allowedOrigins = [
     "http://localhost:5173", 
     "http://localhost:3000",
-    "https://cafechain-tau.vercel.app" // Your Vercel Frontend URL
+    "https://cafe-chain.vercel.app/" // Your Vercel Frontend URL
 ];
 
 // --- Core Middleware ---
