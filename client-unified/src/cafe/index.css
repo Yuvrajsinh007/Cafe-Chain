@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cafechain-primary: #4a3a2f;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+  }
+  
+  /* Improve focus visibility for accessibility */
+  :focus {
+    @apply outline-none ring-2 ring-primary/50;
+  }
+  
+  /* Improve text readability */
+  p, h1, h2, h3, h4, h5, h6 {
+    @apply break-words;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary;
+  }
+  
+  .btn-primary {
+    background-color: var(--cafechain-primary);
+    color: white;
+    @apply hover:bg-primary/90;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-white hover:bg-secondary/90;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 hover:bg-gray-100;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-4;
+  }
+  
+  .input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50;
+  }
+  
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+  
+  /* Responsive text utilities */
+  .text-responsive {
+    @apply text-sm sm:text-base;
+  }
+  
+  .heading-responsive {
+    @apply text-xl sm:text-2xl md:text-3xl font-bold;
+  }
+  
+  /* Accessibility utilities */
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  }
+  
+  /* Container utilities */
+  .container-responsive {
+    @apply w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl;
+  }
+}

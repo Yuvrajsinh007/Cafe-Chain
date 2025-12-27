@@ -1,0 +1,57 @@
+# =========================
+# Node.js (Common)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.local
+.env.production
+.env.development
+
+# =========================
+# Client (Vite + React)
+# =========================
+client/node_modules/
+client/dist/
+client/.env
+client/.env.*
+
+# =========================
+# Server (Node + Express)
+# =========================
+server/node_modules/
+server/.env
+server/.env.*
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# OS / Editor files
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Build / Cache
+# =========================
+dist/
+build/
+.cache/
+
+# =========================
+# Optional / Temporary
+# =========================
+coverage/
+*.tmp
