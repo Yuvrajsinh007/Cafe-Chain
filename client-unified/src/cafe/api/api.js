@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 
 // Define the main backend URL
 // const BASE_URL = "http://localhost:5000/api";
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 // Create an Axios instance for Cafe Owner routes
 const apiClient = axios.create({
