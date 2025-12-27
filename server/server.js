@@ -24,15 +24,15 @@ const PORT = process.env.PORT || 5000;
 
 // --- Database Connection ---
 connectDB();
-const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
+
+// ✅ CRITICAL: Add your Vercel domain here
+const allowedOrigins = [
+    "http://localhost:5173", 
+    "http://localhost:3000",
+    "https://cafechain-iota.vercel.app" // Your Vercel Frontend URL
+];
 
 // --- Core Middleware ---
-// app.use(cors({
-//     origin: ["http://localhost:5173", "http://localhost:3000"],
-//     credentials: true,
-// }));
-
-
 app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (like mobile apps or curl requests)
@@ -44,9 +44,10 @@ app.use(cors({
         return callback(null, true);
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Explicitly allow methods
+    allowedHeaders: ["Content-Type", "Authorization"] // Explicitly allow headers
 }));
 
-// ✅ CRITICAL: This is the most important line for your login issue.
 // It allows the server to understand the JSON data sent from your frontend.
 app.use(express.json({ limit: '50mb' }));
 
@@ -55,7 +56,6 @@ app.use(cookieParser());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- API ROUTES ---
-// The express.json() middleware must come before these routes are defined.
 app.use("/api/users", userRoutes);
 app.use("/api/email-otp", emailOtpRoutes);
 app.use("/api/rewards", authenticateUserJWT, rewardRoutes);
