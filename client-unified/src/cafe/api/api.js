@@ -2,7 +2,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 // Define the main backend URL
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://cafe-chain-backend.onrender.com/api";
+// const BASE_URL = "http://localhost:5000/api";
 
 // Create an Axios instance for Cafe Owner routes
 const apiClient = axios.create({

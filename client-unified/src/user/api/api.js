@@ -1,7 +1,8 @@
 // api/api.js
 import axios from 'axios';
 
-const API_URL = "http://localhost:5000/api";
+// const API_URL = "http://localhost:5000/api";
+const API_URL = "https://cafe-chain-backend.onrender.com/api";
 
 const apiClient = async (endpoint, data = {}, options = {}) => {
   const token = localStorage.getItem('authToken');
