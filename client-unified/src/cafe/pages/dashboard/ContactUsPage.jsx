@@ -1,36 +1,27 @@
-// src/cafe/pages/dashboard/ContactUsPage.jsx
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, ArrowLeft } from "lucide-react";
+import { Send, ArrowLeft, Mail, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { submitContactForm } from "../../api/api";
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 const ContactUsPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    subject: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState({ subject: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
-
     setIsSubmitting(true);
     
     try {
-      // No need to send name, email, or type. The backend handles this automatically.
       const response = await submitContactForm(formData);
       toast.success(response.message || "Message sent successfully!");
       setFormData({ subject: "", message: "" });
     } catch (error) {
-      // The api.js interceptor will automatically show a toast for errors.
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -38,95 +29,92 @@ const ContactUsPage = () => {
   };
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-b from-stone-50 to-stone-100 
-                 text-[#4a3a2f] px-4 sm:px-6 py-12 flex items-center justify-center
-                 pt-[90px] pb-[100px] overflow-y-auto relative"
-    >
-      {/* Back Button */}
-      <button
-        onClick={() => navigate(-1)}
-        className="absolute top-6 left-6 flex items-center gap-1 text-[#4a3a2f] 
-                   font-medium hover:text-[#3b2f26] transition-all"
-      >
-        <ArrowLeft size={20} />
-        Back
-      </button>
+    <div className="min-h-screen bg-[#FDFBF7] p-6 flex flex-col items-center justify-center relative overflow-hidden">
+      
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4A3A2F] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-3xl bg-white shadow-xl rounded-2xl p-6 sm:p-10 border border-stone-200"
-      >
-        {/* Title */}
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-3xl font-bold text-center mb-4"
+      <div className="w-full max-w-2xl relative z-10">
+        <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors mb-8 font-medium"
         >
-          Contact Us
-        </motion.h1>
-        <p className="text-center text-gray-600 mb-10 text-sm sm:text-base">
-          Have any questions or feedback? 
-          Fill out the form below and we’ll get
-          back to you soon.
-        </p>
+            <ArrowLeft className="w-5 h-5" /> Back to Dashboard
+        </button>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* REMOVED Name and Email fields */}
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-3xl shadow-xl shadow-amber-900/10 border border-gray-100 overflow-hidden"
+        >
+            <div className="p-8 md:p-10">
+                <div className="text-center mb-10">
+                    <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-amber-600 shadow-sm transform rotate-3">
+                        <Mail className="w-8 h-8" />
+                    </div>
+                    <h1 className="text-3xl font-black text-[#4A3A2F] mb-3 tracking-tight">Get in Touch</h1>
+                    <p className="text-gray-500 max-w-md mx-auto">
+                        Have a question or feedback? We'd love to hear from you. Fill out the form below and we'll be in touch.
+                    </p>
+                </div>
 
-          <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-            <label htmlFor="subject" className="block text-sm font-medium mb-1">
-              Subject
-            </label>
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              value={formData.subject}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border border-stone-300 rounded-lg 
-                         focus:ring-2 focus:ring-[#4a3a2f] focus:outline-none text-sm sm:text-base"
-              placeholder="Subject of your message"
-            />
-          </motion.div>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase ml-1">Subject</label>
+                        <div className="relative group">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <MessageSquare className="h-5 w-5 text-gray-400 group-focus-within:text-amber-600 transition-colors" />
+                            </div>
+                            <input
+                                type="text"
+                                name="subject"
+                                value={formData.subject}
+                                onChange={handleChange}
+                                placeholder="What is this regarding?"
+                                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-gray-800 placeholder-gray-400"
+                                required
+                            />
+                        </div>
+                    </div>
 
-          <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-            <label htmlFor="message" className="block text-sm font-medium mb-1">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows="6"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 border border-stone-300 rounded-lg 
-                         focus:ring-2 focus:ring-[#4a3a2f] focus:outline-none 
-                         text-sm sm:text-base resize-none"
-              placeholder="Write your message here..."
-            />
-          </motion.div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase ml-1">Message</label>
+                        <textarea
+                            name="message"
+                            value={formData.message}
+                            onChange={handleChange}
+                            rows="5"
+                            placeholder="Write your message here..."
+                            className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all text-gray-800 placeholder-gray-400 resize-none"
+                            required
+                        />
+                    </div>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 
-                       bg-[#4a3a2f] text-white py-3 rounded-lg font-semibold 
-                       hover:bg-[#3b2f26] transition-all shadow-md text-sm sm:text-base
-                       disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            <Send size={18} />
-            {isSubmitting ? 'Sending...' : 'Send Message'}
-          </motion.button>
-        </form>
-      </motion.div>
+                    <div className="pt-4">
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className={`w-full py-4 rounded-xl font-bold text-white text-lg shadow-lg shadow-amber-900/20 transition-all transform active:scale-98 flex items-center justify-center gap-2 ${
+                                isSubmitting 
+                                ? 'bg-gray-400 cursor-not-allowed' 
+                                : 'bg-[#4A3A2F] hover:bg-[#3b2d24] hover:shadow-xl hover:-translate-y-0.5'
+                            }`}
+                        >
+                            {isSubmitting ? (
+                                <span className="flex items-center gap-2">
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    Sending...
+                                </span>
+                            ) : (
+                                <>Send Message <Send className="w-5 h-5" /></>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </motion.div>
+      </div>
     </div>
   );
 };

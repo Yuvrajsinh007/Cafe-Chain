@@ -438,7 +438,7 @@ const ProfilePage = () => {
                 </button>
 
                 {/* ADDED: Change Password Button */}
-                <button
+                {/* <button
                   onClick={() => setShowChangePwd(true)}
                   className="w-full flex items-center justify-between text-left p-4 rounded-lg hover:bg-stone-200 transition-colors"
                 >
@@ -447,7 +447,7 @@ const ProfilePage = () => {
                     <span className="font-semibold">Change Password</span>
                   </div>
                   <ArrowRight className="w-5 h-5 text-gray-400" />
-                </button>
+                </button> */}
 
                 <Link
                   to="/user/privacy-policy"

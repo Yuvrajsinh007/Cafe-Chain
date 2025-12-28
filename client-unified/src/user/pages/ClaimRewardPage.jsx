@@ -1,4 +1,4 @@
-// src/pages/ClaimRewardPage.jsx
+// src/user/pages/ClaimRewardPage.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getRewardCafes, claimReward } from "../api/api";
-import toast, { Toaster } from "react-hot-toast"; // <-- added toast
+import { toast } from "sonner"; // <-- added toast
 
 const ClaimRewardPage = () => {
   const navigate = useNavigate();
@@ -129,7 +129,6 @@ const ClaimRewardPage = () => {
   return (
     <div className="min-h-screen bg-white text-[#4A3A2F] font-sans pb-24 pt-20 md:pt-0">
       {/* Toast container */}
-      <Toaster position="top-right" reverseOrder={false} />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.header

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Loader from '../../components/Loader';
 import { useAppContext } from '../../store/AppContext';

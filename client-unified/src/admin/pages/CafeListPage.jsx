@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ NEW: Import useNavigate
-import axios from "axios";
-import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import CafeTable from "../components/CafeTable";
 import Loader from "../components/Loader";
 import { adminGetAllCafes } from "../api/api";
+import { Search, Filter } from "lucide-react";
 
 export default function CafeListPage() {
     const [cafes, setCafes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("All");
-    const navigate = useNavigate(); // ✅ NEW: Initialize navigate hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchAllCafes = async () => {
@@ -27,7 +27,6 @@ export default function CafeListPage() {
         fetchAllCafes();
     }, []);
 
-    // This function will be called when a row is clicked
     const handleRowClick = (cafe) => {
         navigate(`/pithad/cafes/${cafe._id}`);
     };
@@ -43,29 +42,38 @@ export default function CafeListPage() {
     if (isLoading) return <Loader />;
 
     return (
-        <div>
-            <h1 className="text-2xl font-bold mb-6">All Cafes</h1>
-            <div className="mb-4 flex gap-4 bg-white p-4 rounded-lg shadow">
-                <input 
-                    className="border px-3 py-2 rounded-lg w-full" 
-                    placeholder="Search by name or address..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <select 
-                    className="border px-3 py-2 rounded-lg"
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                >
-                    <option>All</option>
-                    <option>Active</option>
-                    <option>Pending Approval</option>
-                    <option>Rejected</option>
-                </select>
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold text-gray-800">Cafe Directory</h1>
+                <p className="text-gray-500 text-sm">Manage registered cafes and their status</p>
             </div>
-            {/* ✅ UPDATED: Pass the new click handler to the table */}
+
+            <div className="flex flex-col md:flex-row gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <input 
+                        className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none" 
+                        placeholder="Search by name or address..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="relative w-full md:w-64">
+                    <Filter className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <select 
+                        className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none bg-white appearance-none cursor-pointer"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <option>All</option>
+                        <option>Active</option>
+                        <option>Pending Approval</option>
+                        <option>Rejected</option>
+                    </select>
+                </div>
+            </div>
+
             <CafeTable cafes={filteredCafes} onRowClick={handleRowClick} />
-            {/* The modal is no longer needed on this page and has been removed */}
         </div>
     );
 }

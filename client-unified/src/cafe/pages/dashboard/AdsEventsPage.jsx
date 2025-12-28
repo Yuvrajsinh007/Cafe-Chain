@@ -1,23 +1,15 @@
-
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppContext } from '../../store/AppContext';
-import { ArrowLeft, Calendar, Clock, MapPin, Star } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Search, Filter } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import Loader from '../../components/Loader';
 import { getActiveEvents } from '../../api/api';
-import { FaWhatsapp } from 'react-icons/fa'; // <-- Added for WhatsApp logo
+import { FaWhatsapp } from 'react-icons/fa';
 
-const PRIMARY = '#4a3a2f';
-const ACCENT1 = '#25D366'; // WhatsApp green
-const ACCENT2 = '#FFD93D';
-const LIGHT_BG = '#ffffff'; // white background
-const SHAPE_COLORS = ['#FFB6B9', '#6BCB77', '#4D96FF', '#FFD93D'];
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 50, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15, duration: 0.8 } },
-  hover: { scale: 1.03, boxShadow: `0 20px 40px rgba(0,0,0,0.1)` },
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 };
 
 export default function AdsEventsPage() {
@@ -37,7 +29,7 @@ export default function AdsEventsPage() {
         setAllEvents(data);
         setFilteredEvents(data);
       } catch (error) {
-        console.error("Failed to fetch events:", error);
+        console.error("Failed to fetch events");
       } finally {
         setIsLoading(false);
       }
@@ -56,118 +48,124 @@ export default function AdsEventsPage() {
   if (isContextLoading || isLoading) return <Loader />;
 
   return (
-    <div className="min-h-screen font-sans bg-white relative overflow-hidden">
-      {/* Floating decorative shapes */}
-      {SHAPE_COLORS.map((color, idx) => (
-        <motion.div
-          key={idx}
-          className="absolute rounded-full opacity-20"
-          style={{
-            width: `${30 + idx * 10}px`,
-            height: `${30 + idx * 10}px`,
-            backgroundColor: color,
-            top: `${10 + idx * 20}%`,
-            left: `${20 + idx * 15}%`,
-          }}
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 4 + idx, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' }}
-        />
-      ))}
+    <div className="min-h-screen bg-[#FDFBF7] p-6 lg:p-12 font-sans relative overflow-hidden">
+      
+      {/* Header Section */}
+      <div className="max-w-7xl mx-auto mb-12">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+            <button
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors font-medium"
+            >
+                <ArrowLeft className="w-5 h-5" /> Back
+            </button>
 
-      <header className="p-6 flex items-center justify-between">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center text-lg font-semibold hover:scale-105 transition-transform
-                    border-none outline-none focus:outline-none focus:ring-0 active:outline-none active:ring-0 focus-visible:outline-none"
-          style={{ color: PRIMARY, background: "transparent" }}
+            <a
+                href="https://wa.me/917575825782?text=Hello%20CafeChain%2C%20We%20are%20interested%20to%20post%20an%20event%20or%20ads!"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-bold shadow-lg shadow-green-500/20 hover:bg-[#20bd5a] hover:-translate-y-0.5 transition-all"
+            >
+                <FaWhatsapp className="w-5 h-5" />
+                Book Ads & Events
+            </a>
+        </div>
+
+        <div className="text-center md:text-left">
+            <h1 className="text-4xl md:text-5xl font-black text-[#4A3A2F] tracking-tight mb-2">
+                Discover Events
+            </h1>
+            <p className="text-lg text-gray-500">Explore exclusive promotions and gatherings.</p>
+        </div>
+      </div>
+
+      {/* Filters (Optional Placeholder for Future Logic) */}
+      <div className="max-w-7xl mx-auto mb-10 flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+        <button 
+            onClick={() => setFilter('all')}
+            className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${filter === 'all' ? 'bg-[#4A3A2F] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'}`}
         >
-          <ArrowLeft className="mr-2" /> Back
+            All Events
         </button>
-
-        <a
-          href="https://wa.me/917575825782?text=Hello%20CafeChain%2C%20We%20are%20interested%20to%20post%20an%20event%20or%20ads!
-"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-5 py-2 rounded-full font-semibold shadow-md hover:scale-105 transition-transform"
-          style={{ backgroundColor: ACCENT1, color: 'white' }}
-        >
-          <FaWhatsapp size={20} /> {/* WhatsApp icon added */}
-          Book Your Ads & Events
-        </a>
-      </header>
-
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center text-5xl font-extrabold mb-10"
-        style={{ background: 'linear-gradient(90deg, #FF6B6B, #FFD93D)', WebkitBackgroundClip: 'text', color: 'transparent' }}
-      >
-        Ads & Events
-      </motion.h1>
-
-      {/* Event Cards */}
-      <div className="container mx-auto px-4 md:px-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <AnimatePresence>
-          {filteredEvents.length > 0 ? filteredEvents.map((event, index) => (
-            <motion.div
-              key={event._id}
-              className="rounded-3xl shadow-lg overflow-hidden cursor-pointer relative flex flex-col bg-white border border-gray-100 h-full"
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              whileHover="hover"
-              style={{ minHeight: '480px' }} // Make all cards roughly same height
+        {user && (
+            <button 
+                onClick={() => setFilter('my_cafe')}
+                className={`px-5 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${filter === 'my_cafe' ? 'bg-[#4A3A2F] text-white shadow-md' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'}`}
             >
-              {/* Badge */}
-              <div className="absolute top-4 right-4 bg-gradient-to-r from-red-400 to-yellow-300 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-md z-10">
-                {event.type || 'Event'}
-              </div>
-              <img
-                src={event.image || "/assets/Images/logo.jpg"}
-                alt={event.name || 'Event Image'}
-                className="h-56 w-full object-cover"
-              />
-              <div className="p-6 flex flex-col flex-grow">
-                <h2 className="text-2xl font-bold mb-2" style={{ color: ACCENT1 }}>
-                  {event.name || "Untitled Event"}
-                </h2>
-                <p className="text-gray-700 flex-grow">{event.description || "No description available."}</p>
-                <div className="mt-4 space-y-2 text-sm text-gray-600">
-                  <div className="flex items-center">
-                    <Calendar size={18} className="mr-2" style={{ color: ACCENT2 }} />
-                    <span>
-                      {event.date 
-                        ? new Date(event.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
-                        : "Date not specified" }
-                    </span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock size={18} className="mr-2" style={{ color: ACCENT2 }} />
-                    <span>{event.time || "Time not specified"}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <MapPin size={18} className="mr-2" style={{ color: ACCENT2 }} />
-                    {event.cafe ? (
-                      <Link to={`/user/cafes/${event.cafe._id}`} className="hover:underline" style={{ color: ACCENT1 }}>
-                        <span>{event.cafe.name}</span>
-                      </Link>
-                    ) : (
-                      <span className="text-gray-500">Cafe not specified</span>
-                    )}
-                  </div>
+                My Events
+            </button>
+        )}
+      </div>
+
+      {/* Events Grid */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <AnimatePresence mode="popLayout">
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
+              <motion.div
+                key={event._id}
+                variants={fadeIn}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, scale: 0.9 }}
+                layout
+                className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+              >
+                <div className="relative h-60 overflow-hidden">
+                    <img
+                        src={event.image || "/assets/Images/logo.jpg"}
+                        alt={event.name}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider text-[#4A3A2F] shadow-sm">
+                        {event.type || 'Event'}
+                    </div>
                 </div>
-              </div>
-            </motion.div>
-          )) : (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center text-gray-500 col-span-full text-lg"
+
+                <div className="p-6 flex flex-col flex-grow">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-3 group-hover:text-amber-700 transition-colors line-clamp-1">
+                        {event.name}
+                    </h2>
+                    
+                    <div className="space-y-3 mb-6 flex-grow">
+                        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
+                            {event.description}
+                        </p>
+                    </div>
+
+                    <div className="space-y-2 border-t border-gray-50 pt-4 text-sm text-gray-500 font-medium">
+                        <div className="flex items-center gap-3">
+                            <Calendar className="w-4 h-4 text-amber-500" />
+                            {event.date ? new Date(event.date).toLocaleDateString() : "Date TBA"}
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <Clock className="w-4 h-4 text-amber-500" />
+                            {event.time || "Time TBA"}
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <MapPin className="w-4 h-4 text-amber-500" />
+                            {event.cafe ? (
+                                <Link to={`/user/cafes/${event.cafe._id}`} className="hover:text-[#4A3A2F] hover:underline transition-colors truncate">
+                                    {event.cafe.name}
+                                </Link>
+                            ) : <span>Location TBA</span>}
+                        </div>
+                    </div>
+                </div>
+              </motion.div>
+            ))
+          ) : (
+            <motion.div 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                className="col-span-full py-20 text-center text-gray-400"
             >
-              No events found.
-            </motion.p>
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Search className="w-8 h-8 text-gray-300" />
+                </div>
+                <p className="text-lg font-medium">No events found</p>
+                <p className="text-sm">Check back later for updates.</p>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>

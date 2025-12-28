@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 import Loader from "../../components/Loader"; // ✅ Import Loader component
 import cafeLogo from "../../assets/cc.png";
@@ -261,4 +261,3 @@ function FirstTimeSetup() {
 }
 
 export default FirstTimeSetup;
-

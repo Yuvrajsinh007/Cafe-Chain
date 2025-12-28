@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Send } from "lucide-react";
 import { submitContactForm } from "../api/api";
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 const ContactUsPage = () => {
   const [formData, setFormData] = useState({

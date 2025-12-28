@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "../../store/AppContext";
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { toast } from "sonner"; // ✅ Correct import for toast function
 import {
   getCafeProfile,
   updateCafeProfile,
@@ -9,14 +9,19 @@ import {
   deleteCafeImage,
 } from "../../api/api";
 import {
-  BuildingStorefrontIcon,
-  PhotoIcon,
-  PhoneIcon,
-  MapPinIcon,
-  ArrowLeftIcon,
-  InformationCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+  Store,
+  Image,
+  Phone,
+  MapPin,
+  ArrowLeft,
+  Info,
+  X,
+  Camera,
+  Trash2,
+  Mail,
+  Clock,
+  Tag
+} from "lucide-react";
 
 function ProfileGalleryPage() {
   const { state, dispatch } = useAppContext();
@@ -26,7 +31,6 @@ function ProfileGalleryPage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [editMode, setEditMode] = useState(false);
   
-  // Initialize form state
   const [cafeForm, setCafeForm] = useState({
     name: "",
     address: "",
@@ -57,7 +61,7 @@ function ProfileGalleryPage() {
     }
   }, [cafeInfo, dispatch]);
 
-  // 2. Sync Form with cafeInfo when it becomes available
+  // 2. Sync Form with cafeInfo
   useEffect(() => {
     if (cafeInfo) {
       setCafeForm({
@@ -73,26 +77,11 @@ function ProfileGalleryPage() {
   }, [cafeInfo]);
 
   if (!cafeInfo) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return <div className="min-h-screen flex justify-center items-center text-gray-500">Loading Profile...</div>;
   }
 
   const availableTags = [
-    "Coffee",
-    "Tea",
-    "Italian Food",
-    "Fast Food",
-    "Pastries",
-    "Breakfast",
-    "Lunch",
-    "Vegan",
-    "Organic",
-    "Specialty Coffee",
-    "Wifi",
-    "Study Friendly",
-    "Pet Friendly",
-    "Outdoor Seating",
-    "Live Music",
-    "Fastfood"
+    "Coffee", "Tea", "Italian Food", "Fast Food", "Pastries", "Breakfast", "Lunch", "Vegan", "Organic", "Specialty Coffee", "Wifi", "Study Friendly", "Pet Friendly", "Outdoor Seating", "Live Music", "Fastfood"
   ];
 
   const handleCafeFormChange = (e) => {
@@ -174,7 +163,6 @@ function ProfileGalleryPage() {
     try {
       const payload = { ...cafeForm, features: cafeForm.tags };
       delete payload.tags;
-      // We don't send name, phone, email back since they are read-only/fixed
       const response = await updateCafeProfile(payload);
       dispatch({ type: "SET_CAFE_INFO", payload: response.data.cafe });
       setEditMode(false);
@@ -184,373 +172,284 @@ function ProfileGalleryPage() {
     }
   };
 
-  const tabConfig = [
-    { id: "profile", label: "Cafe Profile", icon: BuildingStorefrontIcon },
-    { id: "gallery", label: "Photo Gallery", icon: PhotoIcon },
-  ];
-
   return (
-    <div className="min-h-screen bg-white font-sans antialiased">
-      <Toaster position="top-right" />
-      <div className="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FDFBF7] font-sans text-gray-800 p-6 lg:p-12">
+      
+      <div className="max-w-5xl mx-auto">
+        
         {/* Back button */}
-        <div className="hidden md:flex items-center mb-6">
-          <button
+        <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition font-medium 
-                       border-none outline-none focus:outline-none focus:ring-0 bg-transparent"
-          >
-            <ArrowLeftIcon className="h-5 w-5" />
-            Back
-          </button>
-        </div>
+            className="flex items-center gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors font-medium mb-8"
+        >
+            <ArrowLeft className="h-5 w-5" /> Back
+        </button>
 
         {/* Header */}
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold font-serif text-gray-800 mb-3 tracking-tight">
-            Manage Your Cafe
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Keep your cafe details up-to-date and showcase your atmosphere with photos.
-          </p>
-        </header>
+        <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-10">
+            <div>
+                <h1 className="text-4xl font-black text-[#4A3A2F] tracking-tight">Manage Cafe</h1>
+                <p className="text-lg text-gray-500 mt-2">Update your details and gallery.</p>
+            </div>
 
-        {/* Tabs */}
-        <nav className="flex justify-center mb-10">
-          <div className="flex bg-gray-100 rounded-xl overflow-hidden shadow-sm">
-            {tabConfig.map((tab) => {
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-8 py-3 text-sm font-medium transition-all ${
-                    activeTab === tab.id
-                      ? "bg-gradient-to-r from-amber-500 to-orange-400 text-white"
-                      : "text-gray-700 hover:bg-gray-200"
-                  }`}
+            {/* Tabs */}
+            <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-100 inline-flex">
+                <button 
+                    onClick={() => setActiveTab('profile')}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${
+                        activeTab === 'profile' 
+                        ? 'bg-[#4A3A2F] text-white shadow-md' 
+                        : 'text-gray-500 hover:bg-gray-50'
+                    }`}
                 >
-                  <Icon className="h-5 w-5" />
-                  {tab.label}
+                    <Store className="w-4 h-4" /> Profile
                 </button>
-              );
-            })}
-          </div>
-        </nav>
+                <button 
+                    onClick={() => setActiveTab('gallery')}
+                    className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${
+                        activeTab === 'gallery' 
+                        ? 'bg-[#4A3A2F] text-white shadow-md' 
+                        : 'text-gray-500 hover:bg-gray-50'
+                    }`}
+                >
+                    <Image className="w-4 h-4" /> Gallery
+                </button>
+            </div>
+        </div>
 
-        {/* Profile Tab */}
+        {/* PROFILE TAB */}
         {activeTab === "profile" && (
-          <section className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden">
-            {/* Header */}
-            <div className="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-amber-50 to-orange-50">
-              <div>
-                <h2 className="text-2xl font-bold font-serif text-gray-800">Cafe Information</h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  Update your cafe details to help customers find you.
-                </p>
-              </div>
-              {!editMode && (
-                <button
-                  onClick={() => setEditMode(true)}
-                  className="px-5 py-2 border border-amber-500 text-amber-600 rounded-lg hover:bg-amber-500 hover:text-white transition"
-                >
-                  Edit Profile
-                </button>
-              )}
-            </div>
-
-            {/* Content */}
-            <div className="p-8">
-              {/* Editable Form */}
-              {editMode ? (
-                <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  
-                  {/* --- READ ONLY FIELDS --- */}
-                  
-                  {/* Name (Read Only) */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">Cafe Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={cafeForm.name}
-                      readOnly
-                      title="Cafe name cannot be changed"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-200 text-gray-600 cursor-not-allowed focus:outline-none"
-                    />
-                  </div>
-
-                  {/* Phone (Read Only) */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">Phone</label>
-                    <input
-                      type="text"
-                      name="phone"
-                      value={cafeForm.phone}
-                      readOnly
-                      title="Phone number cannot be changed"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-200 text-gray-600 cursor-not-allowed focus:outline-none"
-                    />
-                  </div>
-
-                  {/* Email (Read Only) */}
-                  <div className="lg:col-span-2 space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={cafeForm.email}
-                      readOnly
-                      title="Email address cannot be changed"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-200 text-gray-600 cursor-not-allowed focus:outline-none"
-                    />
-                  </div>
-
-                  {/* --- EDITABLE FIELDS --- */}
-
-                  {/* Address */}
-                  <div className="lg:col-span-2 space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">Address</label>
-                    <input
-                      type="text"
-                      name="address"
-                      value={cafeForm.address}
-                      onChange={handleCafeFormChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  {/* Hours */}
-                  <div className="lg:col-span-2 space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">Opening Hours</label>
-                    <input
-                      type="text"
-                      name="openingHours"
-                      value={cafeForm.openingHours}
-                      onChange={handleCafeFormChange}
-                      placeholder="e.g. Mon-Fri: 8am-6pm"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  {/* Description */}
-                  <div className="lg:col-span-2 space-y-2">
-                    <label className="block text-sm font-semibold text-gray-700">Description</label>
-                    <textarea
-                      name="description"
-                      value={cafeForm.description}
-                      onChange={handleCafeFormChange}
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-amber-500 focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  {/* Tags */}
-                  <div className="lg:col-span-2 space-y-4">
-                    <label className="block text-sm font-semibold text-gray-700">
-                      Cafe Tags (Select up to 3)
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {availableTags.map((tag) => (
-                        <button
-                          key={tag}
-                          type="button"
-                          onClick={() => handleTagToggle(tag)}
-                          className={`px-4 py-2 rounded-full text-sm border transition ${
-                            cafeForm.tags.includes(tag)
-                              ? "bg-gradient-to-r from-amber-500 to-orange-400 text-white border-amber-500"
-                              : "bg-white text-gray-700 border-gray-300 hover:border-amber-400"
-                          }`}
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-8 lg:p-12">
+                <div className="flex justify-between items-center mb-8 pb-6 border-b border-gray-100">
+                    <h2 className="text-2xl font-bold text-gray-800">General Information</h2>
+                    {!editMode && (
+                        <button 
+                            onClick={() => setEditMode(true)} 
+                            className="px-5 py-2 border border-[#4A3A2F] text-[#4A3A2F] font-bold rounded-xl hover:bg-[#4A3A2F] hover:text-white transition-all"
                         >
-                          {tag}
+                            Edit Details
                         </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="lg:col-span-2 flex justify-end gap-4 pt-6 border-t border-gray-100">
-                    <button
-                      type="button"
-                      onClick={() => setEditMode(false)}
-                      className="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-400 text-white rounded-lg hover:opacity-90 transition shadow-md"
-                    >
-                      Save Changes
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                // View Mode
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Contact */}
-                  <div className="p-6 bg-amber-50 rounded-xl border border-amber-100">
-                    <h3 className="flex items-center gap-2 font-semibold text-gray-800 mb-3">
-                      <PhoneIcon className="h-5 w-5" /> Contact
-                    </h3>
-                    <p className="text-sm text-gray-600"><strong>Phone:</strong> {cafeInfo.cafePhone || "N/A"}</p>
-                    <p className="text-sm text-gray-600"><strong>Email:</strong> {cafeInfo.email || "N/A"}</p>
-                  </div>
-
-                  {/* Location */}
-                  <div className="p-6 bg-orange-50 rounded-xl border border-orange-100">
-                    <h3 className="flex items-center gap-2 font-semibold text-gray-800 mb-3">
-                      <MapPinIcon className="h-5 w-5" /> Location & Hours
-                    </h3>
-                    <p className="text-sm text-gray-600"><strong>Address:</strong> {cafeInfo.address || "N/A"}</p>
-                    <p className="text-sm text-gray-600">
-                      <strong>Hours:</strong> {cafeInfo.openingHours || "Not specified"}
-                    </p>
-                  </div>
-
-                  {/* Description */}
-                  <div className="md:col-span-2 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100">
-                    <h3 className="flex items-center gap-2 font-semibold text-gray-800 mb-3">
-                      <InformationCircleIcon className="h-5 w-5" /> About
-                    </h3>
-                    <p className="text-sm text-gray-700 leading-relaxed">
-                      {cafeInfo.description || "No description yet."}
-                    </p>
-                  </div>
-
-                  {/* Tags */}
-                  {cafeInfo.features && cafeInfo.features.length > 0 && (
-                    <div className="md:col-span-2 p-6 bg-white rounded-xl border border-gray-200">
-                      <h3 className="flex items-center gap-2 font-semibold text-gray-800 mb-3">
-                        Cafe Tags
-                      </h3>
-                      <div className="flex flex-wrap gap-2">
-                        {cafeInfo.features.slice(0, 3).map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1 rounded-full text-sm bg-gradient-to-r from-amber-500 to-orange-400 text-white"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    )}
                 </div>
-              )}
+
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    {/* Read Only Block */}
+                    <div className="space-y-6">
+                        <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Fixed Details</h3>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 block mb-1">Cafe Name</label>
+                                    <p className="font-bold text-gray-800 text-lg">{cafeForm.name}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 block mb-1">Registered Email</label>
+                                    <p className="font-medium text-gray-700 flex items-center gap-2"><Mail className="w-4 h-4 text-gray-400"/> {cafeForm.email}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 block mb-1">Registered Phone</label>
+                                    <p className="font-medium text-gray-700 flex items-center gap-2"><Phone className="w-4 h-4 text-gray-400"/> {cafeForm.phone}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Editable Block */}
+                    <div className="space-y-6">
+                        {/* Address */}
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 mb-1 block">Address</label>
+                            {editMode ? (
+                                <input 
+                                    name="address" 
+                                    value={cafeForm.address} 
+                                    onChange={handleCafeFormChange} 
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all" 
+                                />
+                            ) : (
+                                <p className="text-gray-600 flex items-start gap-2"><MapPin className="w-5 h-5 text-gray-400 mt-0.5 shrink-0"/> {cafeForm.address}</p>
+                            )}
+                        </div>
+
+                        {/* Hours */}
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 mb-1 block">Opening Hours</label>
+                            {editMode ? (
+                                <input 
+                                    name="openingHours" 
+                                    value={cafeForm.openingHours} 
+                                    onChange={handleCafeFormChange} 
+                                    placeholder="e.g. Mon-Fri: 8am-6pm"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all" 
+                                />
+                            ) : (
+                                <p className="text-gray-600 flex items-center gap-2"><Clock className="w-5 h-5 text-gray-400"/> {cafeForm.openingHours || "Not Set"}</p>
+                            )}
+                        </div>
+
+                        {/* Description */}
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 mb-1 block">About</label>
+                            {editMode ? (
+                                <textarea 
+                                    name="description" 
+                                    value={cafeForm.description} 
+                                    onChange={handleCafeFormChange} 
+                                    rows={4} 
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 outline-none transition-all resize-none" 
+                                />
+                            ) : (
+                                <p className="text-gray-600 leading-relaxed bg-amber-50/50 p-4 rounded-xl border border-amber-100 text-sm">{cafeForm.description || "No description provided."}</p>
+                            )}
+                        </div>
+
+                        {/* Tags */}
+                        <div>
+                            <label className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                                <Tag className="w-4 h-4 text-gray-400" /> Tags {editMode && <span className="text-gray-400 font-normal text-xs">(Max 3)</span>}
+                            </label>
+                            <div className="flex flex-wrap gap-2">
+                                {editMode ? (
+                                    availableTags.map(tag => (
+                                        <button 
+                                            key={tag} 
+                                            type="button" 
+                                            onClick={() => handleTagToggle(tag)} 
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                                                cafeForm.tags.includes(tag) 
+                                                ? "bg-[#4A3A2F] text-white border-[#4A3A2F] shadow-sm" 
+                                                : "bg-white text-gray-500 border-gray-200 hover:border-amber-400 hover:text-amber-600"
+                                            }`}
+                                        >
+                                            {tag}
+                                        </button>
+                                    ))
+                                ) : (
+                                    cafeForm.tags.length > 0 ? (
+                                        cafeForm.tags.map((tag, i) => (
+                                            <span key={i} className="px-3 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                                {tag}
+                                            </span>
+                                        ))
+                                    ) : (
+                                        <span className="text-gray-400 text-sm italic">No tags selected.</span>
+                                    )
+                                )}
+                            </div>
+                        </div>
+
+                        {editMode && (
+                            <div className="flex gap-3 pt-6 border-t border-gray-100">
+                                <button 
+                                    type="button" 
+                                    onClick={() => setEditMode(false)} 
+                                    className="flex-1 px-6 py-3 font-bold text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    type="submit" 
+                                    className="flex-[2] px-6 py-3 font-bold text-white bg-[#4A3A2F] rounded-xl hover:bg-[#3b2d24] transition-colors shadow-lg shadow-amber-900/10"
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </form>
             </div>
-          </section>
+          </div>
         )}
 
-        {/* Gallery Tab */}
+        {/* GALLERY TAB */}
         {activeTab === "gallery" && (
-          <section className="bg-white shadow-lg rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-orange-50">
-              <h2 className="text-2xl font-bold font-serif text-gray-800">Photo Gallery</h2>
-              <p className="text-sm text-gray-600">Upload and manage cafe photos.</p>
-            </div>
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="p-8 lg:p-12">
+                <div className="mb-12 text-center bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-10 hover:border-amber-400 hover:bg-amber-50/10 transition-all duration-300">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-amber-500">
+                        <Camera className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 mb-2">Upload Photos</h3>
+                    <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">Showcase your ambiance. Max 5 photos allowed.</p>
+                    
+                    <label className="cursor-pointer inline-flex items-center gap-2 px-8 py-3 bg-[#4A3A2F] text-white font-bold rounded-xl hover:bg-[#3b2d24] transition-all shadow-lg shadow-amber-900/10 transform active:scale-95">
+                        <span>Select Images</span>
+                        <input type="file" multiple accept="image/*" onChange={handleImageSelect} className="hidden" />
+                    </label>
 
-            <div className="p-8">
-              {/* Upload */}
-              <div className="mb-10 p-8 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50">
-                <div className="text-center">
-                  <PhotoIcon className="h-12 w-12 mx-auto text-amber-500" />
-                  <p className="mt-3 text-sm text-gray-600">
-                    Select and upload new cafe photos
-                  </p>
-                  <label className="inline-block mt-4 cursor-pointer">
-                    <span className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-400 text-white rounded-lg hover:opacity-90 transition">
-                      Choose Images
-                    </span>
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImageSelect}
-                      className="sr-only"
-                    />
-                  </label>
+                    {/* Previews */}
+                    {imagePreviews.length > 0 && (
+                        <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in slide-in-from-bottom-4">
+                            {imagePreviews.map((src, i) => (
+                                <div key={i} className="relative group aspect-square rounded-xl overflow-hidden shadow-sm border border-gray-100">
+                                    <img src={src} className="w-full h-full object-cover" alt="preview" />
+                                    <button 
+                                        onClick={() => { setSelectedImages(p => p.filter((_, idx) => idx !== i)); setImagePreviews(p => p.filter((_, idx) => idx !== i)); }} 
+                                        className="absolute top-2 right-2 bg-black/60 text-white p-1.5 rounded-full hover:bg-red-500 transition-colors backdrop-blur-sm"
+                                    >
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {imagePreviews.length > 0 && (
+                        <div className="mt-8 flex justify-center gap-4 border-t border-gray-200 pt-6">
+                            <button 
+                                onClick={() => { setImagePreviews([]); setSelectedImages([]); setUploadProgress(0); }} 
+                                className="px-6 py-2.5 text-gray-500 font-bold hover:bg-gray-200 rounded-lg transition"
+                            >
+                                Clear
+                            </button>
+                            <button 
+                                onClick={handleImageUpload} 
+                                className="px-8 py-2.5 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition shadow-sm"
+                            >
+                                Confirm Upload
+                            </button>
+                        </div>
+                    )}
+                    
+                    {uploadProgress > 0 && (
+                        <div className="mt-6 w-full max-w-md mx-auto bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                            <div className="h-full bg-green-500 transition-all duration-300 rounded-full" style={{ width: `${uploadProgress}%` }}></div>
+                        </div>
+                    )}
                 </div>
 
-                {imagePreviews.length > 0 && (
-                  <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {imagePreviews.map((preview, idx) => (
-                      <div key={idx} className="relative group">
-                        <img
-                          src={preview}
-                          alt="Preview"
-                          className="w-full h-40 object-cover rounded-lg border border-gray-200"
-                        />
-                        <button
-                          onClick={() => {
-                            setSelectedImages((prev) => prev.filter((_, i) => i !== idx));
-                            setImagePreviews((prev) => prev.filter((_, i) => i !== idx));
-                          }}
-                          className="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                        >
-                          <XMarkIcon className="h-5 w-5" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {imagePreviews.length > 0 && (
-                  <div className="mt-4 flex justify-center gap-4">
-                    <button
-                      onClick={handleImageUpload}
-                      className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-400 text-white rounded-lg hover:opacity-90 transition"
-                    >
-                      Upload
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSelectedImages([]);
-                        setImagePreviews([]);
-                        setUploadProgress(0);
-                      }}
-                      className="px-6 py-2 border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-100 transition"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
-
-                {uploadProgress > 0 && (
-                  <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-amber-500 to-orange-400 h-2 rounded-full transition-all"
-                      style={{ width: `${uploadProgress}%` }}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Gallery */}
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {cafeInfo.images && cafeInfo.images.length > 0 ? (
-                  cafeInfo.images.map((img, idx) => (
-                    <div
-                      key={idx}
-                      className="relative aspect-square rounded-lg overflow-hidden shadow-md hover:shadow-xl transition group"
-                    >
-                      <img src={img.url} alt="Cafe" className="w-full h-full object-cover" />
-                      <button
-                        onClick={() => handleRemoveImage(img.public_id)}
-                        className="absolute top-2 right-2 bg-black/60 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
-                      >
-                        <XMarkIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="col-span-full text-center text-sm text-gray-600">
-                    No photos uploaded yet.
-                  </p>
-                )}
-              </div>
+                <div className="flex items-center gap-2 mb-6">
+                    <Image className="w-5 h-5 text-amber-600"/>
+                    <h3 className="font-bold text-gray-800 text-lg">Current Gallery</h3>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {cafeInfo.images?.length > 0 ? (
+                        cafeInfo.images.map((img) => (
+                            <div key={img.public_id} className="relative aspect-square rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all group border border-gray-100">
+                                <img src={img.url} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Cafe" />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                    <button 
+                                        onClick={() => handleRemoveImage(img.public_id)} 
+                                        className="bg-white text-red-500 p-3 rounded-full hover:bg-red-50 transition-all shadow-xl transform hover:scale-110"
+                                        title="Delete Image"
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="col-span-full py-16 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                            <Image className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-400 font-medium">Gallery is empty.</p>
+                        </div>
+                    )}
+                </div>
             </div>
-          </section>
+          </div>
         )}
       </div>
     </div>

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { getLoyaltyMetrics } from "../../api/api"; // backend unchanged
+import { getLoyaltyMetrics } from "../../api/api";
 import Loader from "../../components/Loader";
+import { ArrowLeft, TrendingUp, BarChart3, CreditCard } from "lucide-react";
 
 const cardVariants = {
   rest: { scale: 1, boxShadow: "0 4px 16px rgba(0,0,0,0.08)" },
@@ -10,9 +11,9 @@ const cardVariants = {
   float: {
     y: [0, -6, 0],
     transition: {
-      duration: 2,
+      duration: 3,
       repeat: Infinity,
-      repeatType: "loop",
+      repeatType: "reverse",
       ease: "easeInOut",
     },
   },
@@ -45,75 +46,102 @@ function MetricsPage() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-white px-6 sm:px-8 md:px-12 py-10 md:py-16">
-      {/* Back Button */}
-    <button
-  onClick={() => navigate(-1)}
-  className="absolute top-6 left-6 flex items-center gap-2 
-             text-gray-800 hover:text-gray-600 transition 
-             text-base md:text-lg font-medium 
-             bg-transparent border-none 
-             focus:outline-none focus:ring-0 
-             active:outline-none active:ring-0 
-             focus-visible:outline-none"
->
-  ← Back
-</button>
+    <div className="min-h-screen bg-[#FDFBF7] p-6 lg:p-12 relative overflow-hidden">
+      
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#4A3A2F] rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
 
-
-      {/* Page Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-12 tracking-tight"
-      >
-        Loyalty Program Metrics
-      </motion.h1>
-
-      {/* Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 max-w-7xl mx-auto">
-        {/* Points Redeemed Today */}
-        <motion.div
-          whileHover="hover"
-          initial="rest"
-          animate="float"
-          variants={cardVariants}
-          className="flex flex-col justify-center items-center bg-gradient-to-br from-[#FFE4C4] to-[#FFD580] text-gray-900 rounded-3xl shadow-lg p-8 sm:p-10 md:p-12 border border-gray-200 hover:shadow-xl transition-all"
+      <div className="relative z-10 max-w-6xl mx-auto">
+        <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors mb-8 font-medium"
         >
-          <p className="text-sm sm:text-base font-medium opacity-90">Redeemed Amount(Today)</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-4 text-[#B55A1B]">
-            {metrics?.pointsRedeemedToday ?? 0}
-          </h2>
+            <ArrowLeft className="w-5 h-5" /> Back
+        </button>
+
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+        >
+            <h1 className="text-4xl md:text-5xl font-black text-[#4A3A2F] tracking-tight mb-4">
+                Loyalty Insights
+            </h1>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+                Track your program's performance and customer engagement in real-time.
+            </p>
         </motion.div>
 
-        {/* Redemption Rate */}
-        <motion.div
-          whileHover="hover"
-          initial="rest"
-          animate="float"
-          variants={cardVariants}
-          className="flex flex-col justify-center items-center bg-gradient-to-br from-[#CDEFFF] to-[#7AC7E3] text-gray-900 rounded-3xl shadow-lg p-8 sm:p-10 md:p-12 border border-gray-200 hover:shadow-xl transition-all"
-        >
-          <p className="text-sm sm:text-base font-medium opacity-90">Redemption Rate (Monthly)</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-4 text-[#0B3D91]">
-            {metrics?.redemptionRate ?? 0}%
-          </h2>
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            {/* Card 1: Redeemed Amount */}
+            <motion.div
+                variants={cardVariants}
+                initial="rest"
+                whileHover="hover"
+                animate="float"
+                className="bg-white rounded-3xl p-8 shadow-xl shadow-amber-900/5 border border-amber-100 flex flex-col items-center justify-center text-center relative overflow-hidden group"
+            >
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative z-10">
+                    <div className="p-4 bg-amber-100 rounded-full text-amber-600 mb-6 mx-auto w-fit">
+                        <CreditCard className="w-8 h-8" />
+                    </div>
+                    <h2 className="text-5xl font-black text-[#4A3A2F] mb-2">
+                        {metrics?.pointsRedeemedToday ?? 0}
+                    </h2>
+                    <p className="text-gray-500 font-medium uppercase tracking-wider text-sm">
+                        Redeemed Today
+                    </p>
+                </div>
+            </motion.div>
 
-        {/* Avg Points Per Transaction */}
-        <motion.div
-          whileHover="hover"
-          initial="rest"
-          animate="float"
-          variants={cardVariants}
-          className="flex flex-col justify-center items-center bg-gradient-to-br from-[#E8F4E8] to-[#A8E6A3] text-gray-900 rounded-3xl shadow-lg p-8 sm:p-10 md:p-12 border border-gray-200 hover:shadow-xl transition-all"
-        >
-          <p className="text-sm sm:text-base font-medium opacity-90">Avg. Amount / Transaction</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mt-4 text-[#1F6D1F]">
-            {metrics?.avgPointsPerTransaction ?? 0}
-          </h2>
-        </motion.div>
+            {/* Card 2: Redemption Rate */}
+            <motion.div
+                variants={cardVariants}
+                initial="rest"
+                whileHover="hover"
+                animate="float"
+                className="bg-white rounded-3xl p-8 shadow-xl shadow-blue-900/5 border border-blue-100 flex flex-col items-center justify-center text-center relative overflow-hidden group"
+            >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative z-10">
+                    <div className="p-4 bg-blue-100 rounded-full text-blue-600 mb-6 mx-auto w-fit">
+                        <BarChart3 className="w-8 h-8" />
+                    </div>
+                    <h2 className="text-5xl font-black text-blue-900 mb-2">
+                        {metrics?.redemptionRate ?? 0}%
+                    </h2>
+                    <p className="text-gray-500 font-medium uppercase tracking-wider text-sm">
+                        Monthly Rate
+                    </p>
+                </div>
+            </motion.div>
+
+            {/* Card 3: Avg Transaction */}
+            <motion.div
+                variants={cardVariants}
+                initial="rest"
+                whileHover="hover"
+                animate="float"
+                className="bg-white rounded-3xl p-8 shadow-xl shadow-green-900/5 border border-green-100 flex flex-col items-center justify-center text-center relative overflow-hidden group"
+            >
+                <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                <div className="relative z-10">
+                    <div className="p-4 bg-green-100 rounded-full text-green-600 mb-6 mx-auto w-fit">
+                        <TrendingUp className="w-8 h-8" />
+                    </div>
+                    <h2 className="text-5xl font-black text-green-900 mb-2">
+                        {metrics?.avgPointsPerTransaction ?? 0}
+                    </h2>
+                    <p className="text-gray-500 font-medium uppercase tracking-wider text-sm">
+                        Avg. Transaction
+                    </p>
+                </div>
+            </motion.div>
+
+        </div>
       </div>
     </div>
   );

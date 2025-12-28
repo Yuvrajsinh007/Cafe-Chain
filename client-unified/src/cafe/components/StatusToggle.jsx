@@ -1,4 +1,5 @@
 import { useAppContext } from '../store/AppContext';
+import { Power } from 'lucide-react';
 
 /**
  * StatusToggle component for toggling cafe open/closed status
@@ -12,22 +13,28 @@ function StatusToggle() {
   };
 
   return (
-    <div className="flex items-center">
-      <span className="mr-2 text-sm font-medium text-gray-700">
-        Status: 
-      </span>
+    <div className="flex items-center bg-white p-1.5 rounded-full border border-gray-200 shadow-sm">
       <button
         onClick={handleToggle}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${isOpen ? 'bg-secondary' : 'bg-gray-300'}`}
+        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
+            isOpen 
+            ? "bg-green-100 text-green-700 pr-5" 
+            : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+        }`}
       >
-        <span className="sr-only">{isOpen ? 'Online' : 'Offline'}</span>
-        <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isOpen ? 'translate-x-6' : 'translate-x-1'}`}
-        />
+        <div className={`w-2 h-2 rounded-full ${isOpen ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+        {isOpen ? 'Open for Business' : 'Closed'}
       </button>
-      <span className={`ml-2 text-sm font-medium ${isOpen ? 'text-secondary' : 'text-gray-500'}`}>
-        {isOpen ? 'Open' : 'Closed'}
-      </span>
+      
+      {!isOpen && (
+          <button 
+            onClick={handleToggle}
+            className="ml-2 p-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors shadow-md"
+            title="Go Online"
+          >
+              <Power className="w-4 h-4" />
+          </button>
+      )}
     </div>
   );
 }

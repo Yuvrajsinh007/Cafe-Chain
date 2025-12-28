@@ -32,7 +32,7 @@ import Loader from './components/Loader'
 import ForgotPasswordPage from './pages/auth/ForgotPasswordPage'
 import VerifyForgotPasswordOTPPage from './pages/VerifyForgotPasswordOTPPage'
 import RestPasswordPage from './pages/ResetPasswordPage'
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from 'sonner';
 
 const CafeLayout = () => {
   const { state, dispatch } = useAppContext()
@@ -50,7 +50,34 @@ const CafeLayout = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster 
+        position="top-center" 
+        richColors 
+        closeButton
+        theme="light"
+        toastOptions={{
+          style: {
+            background: '#FFFFFF',
+            border: '1px solid #F3F4F6',
+            color: '#4A3A2F',
+            borderRadius: '16px',
+            boxShadow: '0 10px 30px -10px rgba(0, 0, 0, 0.1)',
+            padding: '16px',
+            fontSize: '14px',
+            fontWeight: '500',
+          },
+          classNames: {
+            toast: 'group toast group-[.toaster]:bg-white group-[.toaster]:text-[#4A3A2F] group-[.toaster]:border-gray-100 group-[.toaster]:shadow-lg',
+            description: 'group-[.toast]:text-gray-500',
+            actionButton: 'group-[.toast]:bg-[#4A3A2F] group-[.toast]:text-white',
+            cancelButton: 'group-[.toast]:bg-gray-100 group-[.toast]:text-gray-500',
+            error: 'group-[.toaster]:text-red-600 group-[.toaster]:bg-red-50 group-[.toaster]:border-red-100',
+            success: 'group-[.toaster]:text-green-600 group-[.toaster]:bg-green-50 group-[.toaster]:border-green-100',
+            warning: 'group-[.toaster]:text-amber-600 group-[.toaster]:bg-amber-50 group-[.toaster]:border-amber-100',
+            info: 'group-[.toaster]:text-blue-600 group-[.toaster]:bg-blue-50 group-[.toaster]:border-blue-100',
+          },
+        }}
+      />
       <main className="flex-grow">
         <Routes>
           {/* Public Routes */}

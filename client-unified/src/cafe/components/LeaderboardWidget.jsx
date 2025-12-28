@@ -1,4 +1,5 @@
 import { useAppContext } from '../store/AppContext';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 /**
  * LeaderboardWidget component to display top 5 cafes
@@ -7,53 +8,44 @@ function LeaderboardWidget() {
   const { state } = useAppContext();
   const { leaderboard } = state;
 
-  // Get top 5 cafes
   const topCafes = leaderboard.slice(0, 5);
 
-  // Helper function to get trend icon
   const getTrendIcon = (trend) => {
     switch (trend) {
-      case 'up':
-        return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-          </svg>
-        );
-      case 'down':
-        return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        );
-      default:
-        return (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14" />
-          </svg>
-        );
+      case 'up': return <TrendingUp className="w-4 h-4 text-green-500" />;
+      case 'down': return <TrendingDown className="w-4 h-4 text-red-500" />;
+      default: return <Minus className="w-4 h-4 text-gray-400" />;
     }
   };
 
   return (
-    <div className="card">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Cafes</h3>
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 h-full">
+      <div className="flex justify-between items-center mb-6">
+          <h3 className="text-lg font-bold text-gray-800">Top Performing Cafes</h3>
+          <span className="text-xs font-medium bg-amber-100 text-amber-700 px-2 py-1 rounded-full">Live Ranking</span>
+      </div>
+      
       <div className="space-y-4">
-        {topCafes.map((cafe) => (
-          <div key={cafe.id} className="flex items-center">
-            <div className="flex-shrink-0">
+        {topCafes.map((cafe, index) => (
+          <div key={cafe.id} className="flex items-center p-3 hover:bg-gray-50 rounded-xl transition-colors group">
+            <div className="flex-shrink-0 relative">
               <img 
                 src={cafe.logo} 
                 alt={`${cafe.name} logo`} 
-                className="h-10 w-10 rounded-full"
+                className="h-12 w-12 rounded-xl object-cover border border-gray-100"
               />
+              <div className="absolute -top-2 -left-2 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm text-xs font-bold border border-gray-100">
+                  #{index + 1}
+              </div>
             </div>
-            <div className="ml-3 flex-grow">
-              <p className="text-sm font-medium text-gray-900">{cafe.name}</p>
-              <p className="text-xs text-gray-500">{cafe.points} points</p>
+            
+            <div className="ml-4 flex-grow min-w-0">
+              <p className="text-sm font-bold text-gray-900 truncate">{cafe.name}</p>
+              <p className="text-xs text-gray-500 font-medium">{cafe.points.toLocaleString()} XP</p>
             </div>
-            <div className="flex items-center">
-              <span className="text-sm font-medium text-gray-900">#{cafe.rank}</span>
-              <span className="ml-2">{getTrendIcon(cafe.trend)}</span>
+            
+            <div className="flex items-center bg-gray-50 px-2 py-1 rounded-lg">
+              {getTrendIcon(cafe.trend)}
             </div>
           </div>
         ))}

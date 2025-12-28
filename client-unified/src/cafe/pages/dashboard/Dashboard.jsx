@@ -3,7 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../../store/AppContext";
 import { getDashboardAnalytics } from "../../api/api";
 import Loader from "../../components/Loader";
-import { LogOut, Menu } from "lucide-react";
+import { 
+  LogOut, 
+  Menu, 
+  LayoutDashboard, 
+  BarChart2, 
+  Gift, 
+  Megaphone, 
+  History, 
+  Tags, 
+  User, 
+  Mail,
+  TrendingUp,
+  Users
+} from "lucide-react";
 
 function Dashboard() {
   const { state, dispatch } = useAppContext();
@@ -22,8 +35,8 @@ function Dashboard() {
         setMetrics({
           daily: {
             sales: 0,
-            newCustomers: response.data.totalCustomerVisits,
-            redemptions: response.data.pointsRedeemedToday,
+            newCustomers: response.data.totalCustomerVisits || 0,
+            redemptions: response.data.pointsRedeemedToday || 0,
           },
         });
       } catch (error) {
@@ -43,199 +56,155 @@ function Dashboard() {
     navigate("/cafe/auth/login", { replace: true });
   };
 
+  const navLinks = [
+    { to: "/cafe", label: "Home", icon: LayoutDashboard },
+    { to: "/cafe/dashboard/metrics", label: "Metrics", icon: BarChart2 },
+    { to: "/cafe/dashboard/redemption", label: "Redemption", icon: Gift },
+    { to: "/cafe/dashboard/ads-events", label: "Ads & Events", icon: Megaphone },
+    { to: "/cafe/dashboard/activity", label: "Activity Log", icon: History },
+    { to: "/cafe/dashboard/offers", label: "Manage Offers", icon: Tags },
+    { to: "/cafe/dashboard/profile", label: "Profile & Settings", icon: User },
+    { to: "/cafe/dashboard/contactus", label: "Contact Us", icon: Mail },
+  ];
+
   if (isLoading) return <Loader />;
 
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+    <main className="min-h-screen bg-[#FDFBF7] flex flex-col lg:flex-row font-sans text-gray-800">
+      
       {/* Mobile Header */}
-      <div className="lg:hidden flex items-center justify-between bg-white shadow-md p-4 sticky top-0 z-30">
-        <h2 className="text-xl font-extrabold" style={{ color: "#4a3a2f" }}>
+      <div className="lg:hidden flex items-center justify-between bg-white shadow-sm border-b border-gray-200 p-4 sticky top-0 z-30">
+        <h2 className="text-xl font-extrabold text-[#4A3A2F] tracking-tight">
           CafeChain
         </h2>
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="p-2 rounded-md hover:bg-gray-100"
+          className="p-2 rounded-lg hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4A3A2F]/20"
         >
-          <Menu className="w-6 h-6 text-gray-700" />
+          <Menu className="w-6 h-6 text-gray-600" />
         </button>
       </div>
 
+      {/* Sidebar Overlay (Mobile) */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
- {/* Sidebar */}
-<aside
-  className={`fixed lg:static inset-y-0 left-0 w-64 bg-white shadow-lg z-20 flex flex-col transform transition-transform duration-300
-  ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-  lg:pt-0 pt-16`} // <-- add pt-16 for mobile view so content is below header
->
-  <div className="p-6 border-b hidden lg:block">
-    <h2 className="text-2xl font-extrabold" style={{ color: "#4a3a2f" }}>
-      CafeChain
-    </h2>
-    <p className="text-sm text-gray-500 mt-1">{cafeInfo?.name}</p>
-  </div>
+      <aside
+        className={`fixed lg:sticky top-0 h-screen w-72 bg-white border-r border-gray-200 z-30 flex flex-col transform transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      >
+        <div className="p-8 border-b border-gray-100 hidden lg:block">
+          <h2 className="text-2xl font-black text-[#4A3A2F] tracking-tight">
+            CafeChain
+          </h2>
+          <p className="text-sm text-gray-500 mt-2 font-medium truncate">{cafeInfo?.name}</p>
+        </div>
 
-  <nav className="mt-6 flex-1 flex flex-col gap-2 px-4">
-    <Link
-      to="/cafe"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Home
-    </Link>
-    <Link
-      to="/cafe/dashboard/metrics"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Metrics
-    </Link>
-    <Link
-      to="/cafe/dashboard/redemption"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Redemption
-    </Link>
-    <Link
-      to="/cafe/dashboard/ads-events"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Ads & Events
-    </Link>
-    <Link
-      to="/cafe/dashboard/activity"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Activity Log
-    </Link>
-    <Link
-      to="/cafe/dashboard/offers"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Manage Offers
-    </Link>
-    <Link
-      to="/cafe/dashboard/profile"
-      className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-    >
-      Profile & Settings
-    </Link>
-     <Link
-    to="/cafe/dashboard/contactus"
-    className="px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-100 hover:text-indigo-700 transition"
-  >
-    Contact Us
-  </Link>
-  </nav>
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 hover:bg-[#4A3A2F]/5 hover:text-[#4A3A2F] font-medium transition-all group"
+            >
+              <link.icon className="w-5 h-5 text-gray-400 group-hover:text-[#4A3A2F] transition-colors" />
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-  <div className="p-4 border-t">
-    <button
-      onClick={handleLogout}
-      className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
-    >
-      <LogOut className="w-5 h-5" />
-      Logout
-    </button>
-  </div>
-</aside>
+        <div className="p-4 border-t border-gray-100 bg-gray-50/50">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-red-100 text-red-600 hover:bg-red-50 hover:border-red-200 font-semibold transition-all shadow-sm"
+          >
+            <LogOut className="w-5 h-5" />
+            Sign Out
+          </button>
+        </div>
+      </aside>
 
-
-      {/* Dashboard Content */}
-      <div className="flex-1  p-4 sm:p-6 lg:p-8">
-        {/* Header */}
-        <header className="bg-white rounded-2xl shadow-md p-6 mb-8 sm:mb-10">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 sm:gap-6">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800">
-                Welcome back, {cafeInfo?.name}
-              </h1>
-              <p className="text-gray-500 mt-1 text-sm sm:text-base">
-                {cafeInfo?.address && `${cafeInfo.address}`}
-              </p>
-            </div>
+      {/* Main Content */}
+      <div className="flex-1 p-4 sm:p-8 lg:p-10 overflow-x-hidden">
+        
+        {/* Welcome Header */}
+        <header className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 mb-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-50 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50 pointer-events-none"></div>
+          <div className="relative z-10">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#4A3A2F] mb-2">
+              Welcome back, {cafeInfo?.name}
+            </h1>
+            <p className="text-gray-500 font-medium">
+              {cafeInfo?.address || "Manage your cafe performance and rewards."}
+            </p>
           </div>
         </header>
 
-        {/* Stats Section */}
-        <section className="mb-10 sm:mb-12">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">
-            Today's Overview
+        {/* Stats Overview */}
+        <section className="mb-10">
+          <h2 className="text-lg font-bold text-gray-800 mb-5 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-amber-600" /> Today's Overview
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div className="group bg-indigo-600 text-white rounded-xl p-5 sm:p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03]">
-              <p className="text-xs uppercase opacity-80">Today Redemptions Amount</p>
-              <p className="text-2xl sm:text-3xl font-bold mt-1">{metrics?.daily?.redemptions}</p>
-              <span className="mt-3 inline-block text-xs px-2 py-1 bg-white/20 rounded-full">Today</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            {/* Stat Card 1 */}
+            <div className="bg-gradient-to-br from-[#4A3A2F] to-[#3B2D25] text-white rounded-2xl p-6 shadow-lg shadow-[#4A3A2F]/20 relative overflow-hidden group">
+              <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <Gift className="w-24 h-24" />
+              </div>
+              <p className="text-amber-200/80 text-sm font-bold uppercase tracking-wider mb-1">Points Redeemed</p>
+              <p className="text-4xl font-black mb-4">{metrics?.daily?.redemptions}</p>
+              <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-xs font-medium backdrop-blur-sm border border-white/10">
+                <span>Today's Total</span>
+              </div>
             </div>
 
-            <div className="group bg-emerald-600 text-white rounded-xl p-5 sm:p-6 shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.03] delay-100">
-              <p className="text-xs uppercase opacity-80">Total Visits</p>
-              <p className="text-2xl sm:text-3xl font-bold mt-1">{metrics?.daily?.newCustomers}</p>
-              <span className="mt-3 inline-block text-xs px-2 py-1 bg-white/20 rounded-full">All Time</span>
+            {/* Stat Card 2 */}
+            <div className="bg-white text-gray-800 rounded-2xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group hover:border-amber-200 transition-colors">
+              <div className="absolute right-4 top-4 p-2 bg-green-50 rounded-lg text-green-600">
+                <Users className="w-6 h-6" />
+              </div>
+              <p className="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Total Visits</p>
+              <p className="text-4xl font-black mb-4 text-[#4A3A2F]">{metrics?.daily?.newCustomers}</p>
+              <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-50 text-green-700 text-xs font-bold">
+                <span>All Time</span>
+              </div>
             </div>
+
           </div>
         </section>
 
-        {/* Quick Action Cards */}
+        {/* Quick Actions Grid */}
         <section>
-          <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">
-            Quick Actions
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {/* Metrics Card */}
-            <Link
-              to="/cafe/dashboard/metrics"
-              className="group bg-indigo-600 text-white rounded-xl shadow-md hover:shadow-xl p-5 sm:p-6 flex flex-col items-start transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.04]"
-            >
-              <div className="p-2 sm:p-3 rounded-lg bg-white/20 mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19V10M6 19V4M16 19v-7M21 19V8" />
-                </svg>
-              </div>
-              <h3 className="font-bold">Metrics</h3>
-              <p className="text-xs sm:text-sm opacity-80">View detailed sales & customers</p>
-            </Link>
-
-            {/* Redemption Card */}
-            <Link
-              to="/cafe/dashboard/redemption"
-              className="group bg-emerald-600 text-white rounded-xl shadow-md hover:shadow-xl p-5 sm:p-6 flex flex-col items-start transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.04] delay-100"
-            >
-              <div className="p-2 sm:p-3 rounded-lg bg-white/20 mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7m16 0H4" />
-                </svg>
-              </div>
-              <h3 className="font-bold">Redemption</h3>
-              <p className="text-xs sm:text-sm opacity-80">Process customer rewards</p>
-            </Link>
-
-            {/* Ads & Events Card */}
-            <Link
-              to="/cafe/dashboard/ads-events"
-              className="group bg-orange-500 text-white rounded-xl shadow-md hover:shadow-xl p-5 sm:p-6 flex flex-col items-start transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.04] delay-200"
-            >
-              <div className="p-2 sm:p-3 rounded-lg bg-white/20 mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5l6-2v14l-6-2M5 8v8" />
-                </svg>
-              </div>
-              <h3 className="font-bold">Ads & Events</h3>
-              <p className="text-xs sm:text-sm opacity-80">Manage promotions & events</p>
-            </Link>
-
-            {/* Activity Card */}
-            <Link
-              to="/cafe/dashboard/activity"
-              className="group bg-blue-600 text-white rounded-xl shadow-md hover:shadow-xl p-5 sm:p-6 flex flex-col items-start transform transition-all duration-300 hover:-translate-y-1 hover:scale-[1.04] delay-300"
-            >
-              <div className="p-2 sm:p-3 rounded-lg bg-white/20 mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0" />
-                </svg>
-              </div>
-              <h3 className="font-bold">Activity Log</h3>
-              <p className="text-xs sm:text-sm opacity-80">Recent transactions & logs</p>
-            </Link>
+          <h2 className="text-lg font-bold text-gray-800 mb-5">Quick Actions</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { to: "/cafe/dashboard/metrics", label: "View Metrics", desc: "Detailed analytics", icon: BarChart2, color: "text-blue-600 bg-blue-50" },
+              { to: "/cafe/dashboard/redemption", label: "Redeem Rewards", desc: "Scan & verify", icon: Gift, color: "text-purple-600 bg-purple-50" },
+              { to: "/cafe/dashboard/ads-events", label: "Ads & Events", desc: "Promote your cafe", icon: Megaphone, color: "text-orange-600 bg-orange-50" },
+              { to: "/cafe/dashboard/activity", label: "Activity Log", desc: "Transaction history", icon: History, color: "text-emerald-600 bg-emerald-50" },
+            ].map((action, idx) => (
+              <Link
+                key={idx}
+                to={action.to}
+                className="group bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors ${action.color}`}>
+                  <action.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-800 group-hover:text-[#4A3A2F] transition-colors">{action.label}</h3>
+                <p className="text-sm text-gray-500 mt-1">{action.desc}</p>
+              </Link>
+            ))}
           </div>
         </section>
+
       </div>
     </main>
   );

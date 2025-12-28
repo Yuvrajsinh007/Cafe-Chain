@@ -27,5 +27,5 @@ exports.startEventCleanupJob = () => {
     scheduled: true,
     timezone: "Asia/Kolkata" // Set to your server's timezone
   });
-  console.log('🗓️  Event cleanup job scheduled to run daily at 1:00 AM.');
+  // console.log('🗓️  Event cleanup job scheduled to run daily at 1:00 AM.');
 };

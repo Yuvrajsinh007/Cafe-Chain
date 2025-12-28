@@ -1,7 +1,7 @@
 // src/admin/api/api.js
 
 import axios from 'axios';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 

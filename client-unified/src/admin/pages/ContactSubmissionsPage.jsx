@@ -2,39 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { getContactSubmissions, deleteContactSubmission, deleteAllContactSubmissions } from '../api/api';
 import Loader from '../components/Loader';
 import { Mail, MessageSquare, User, Briefcase, Calendar, Trash2, ShieldAlert } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
-// A simple, reusable confirmation modal component
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 transition-opacity">
-      <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full transform transition-all">
-        <div className="flex items-start">
-          <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-            <ShieldAlert className="h-6 w-6 text-red-600" aria-hidden="true" />
+    <div className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+      <div className="bg-white rounded-2xl p-6 shadow-2xl max-w-sm w-full animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center gap-4 mb-4">
+          <div className="p-3 bg-red-100 rounded-full text-red-600">
+            <ShieldAlert className="w-6 h-6" />
           </div>
-          <div className="ml-4 text-left">
-            <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">{title}</h3>
-            <p className="mt-2 text-sm text-gray-500">{message}</p>
-          </div>
+          <h3 className="text-lg font-bold text-gray-900">{title}</h3>
         </div>
-        <div className="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse sm:gap-3">
-          <button
-            type="button"
-            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 sm:w-auto sm:text-sm"
-            onClick={onConfirm}
-          >
-            Confirm Delete
-          </button>
-          <button
-            type="button"
-            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 sm:mt-0 sm:w-auto sm:text-sm"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+        <p className="text-gray-600 mb-6">{message}</p>
+        <div className="flex gap-3 justify-end">
+          <button onClick={onClose} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition">Cancel</button>
+          <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition shadow-lg shadow-red-200">Confirm Delete</button>
         </div>
       </div>
     </div>
@@ -47,143 +31,113 @@ const ContactSubmissionsPage = () => {
   const [filter, setFilter] = useState('all');
   const [modalState, setModalState] = useState({ isOpen: false, onConfirm: null, title: '', message: '' });
 
-  const fetchSubmissions = async () => {
-    try {
-      setLoading(true);
-      const data = await getContactSubmissions();
-      setSubmissions(data);
-    } catch (error) {
-      toast.error('Failed to fetch contact submissions.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchSubmissions = async () => {
+      try {
+        const data = await getContactSubmissions();
+        setSubmissions(data);
+      } catch (error) { toast.error('Failed to fetch messages.'); } 
+      finally { setLoading(false); }
+    };
     fetchSubmissions();
   }, []);
 
   const handleDelete = async (id) => {
     try {
       await deleteContactSubmission(id);
-      toast.success('Submission deleted successfully.');
-      setSubmissions(submissions.filter(sub => sub._id !== id));
-    } catch (error) {
-      toast.error('Failed to delete submission.');
-    }
+      toast.success('Message deleted.');
+      setSubmissions(prev => prev.filter(sub => sub._id !== id));
+    } catch { toast.error('Delete failed.'); }
     closeModal();
   };
 
   const handleDeleteAll = async () => {
     try {
       await deleteAllContactSubmissions();
-      toast.success('All submissions have been deleted.');
+      toast.success('All messages cleared.');
       setSubmissions([]);
-    } catch (error) {
-      toast.error('Failed to delete all submissions.');
-    }
+    } catch { toast.error('Clear failed.'); }
     closeModal();
   };
   
-  const openModal = (onConfirmCallback, title, message) => {
-    setModalState({ isOpen: true, onConfirm: onConfirmCallback, title, message });
-  };
-  
-  const closeModal = () => {
-    setModalState({ isOpen: false, onConfirm: null, title: '', message: '' });
-  };
+  const openModal = (onConfirm, title, message) => setModalState({ isOpen: true, onConfirm, title, message });
+  const closeModal = () => setModalState({ ...modalState, isOpen: false });
 
-  const filteredSubmissions = submissions.filter(sub => {
-    if (filter === 'all') return true;
-    return sub.type === filter;
-  });
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
-    });
-  };
+  const filtered = submissions.filter(sub => filter === 'all' || sub.type === filter);
+  const formatDate = (d) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
 
   if (loading) return <Loader />;
 
   return (
     <>
-      <ConfirmationModal 
-        isOpen={modalState.isOpen}
-        onClose={closeModal}
-        onConfirm={modalState.onConfirm}
-        title={modalState.title}
-        message={modalState.message}
-      />
-      <div className="p-6 bg-gray-50 min-h-full">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
-              <h1 className="text-2xl font-bold text-gray-800">Contact Form Submissions</h1>
-              <div className="flex items-center space-x-2">
-                <button onClick={() => setFilter('all')} className={`px-4 py-2 text-sm font-medium rounded-md ${filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>All</button>
-                <button onClick={() => setFilter('user')} className={`px-4 py-2 text-sm font-medium rounded-md ${filter === 'user' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>Users</button>
-                <button onClick={() => setFilter('cafe')} className={`px-4 py-2 text-sm font-medium rounded-md ${filter === 'cafe' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>Cafes</button>
-              </div>
-              <button
-                onClick={() => openModal(() => handleDeleteAll(), 'Delete All Submissions?', 'Are you absolutely sure you want to delete all submissions? This action cannot be undone.')}
-                disabled={submissions.length === 0}
-                className="px-4 py-2 text-sm font-medium rounded-md bg-red-600 text-white hover:bg-red-700 disabled:bg-red-300 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                <Trash2 size={16} />
-                Delete All
-              </button>
+      <ConfirmationModal {...modalState} onClose={closeModal} />
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 className="text-2xl font-bold text-gray-800">Messages</h1>
+                <p className="text-gray-500 text-sm">Inquiries from Users and Cafes</p>
             </div>
-            
-            <div className="space-y-4">
-              {filteredSubmissions.length > 0 ? (
-                filteredSubmissions.map(submission => (
-                  <div key={submission._id} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
-                    <div className="flex items-start space-x-4">
-                      <div className={`mt-1 p-2 rounded-full ${submission.type === 'cafe' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
-                        {submission.type === 'cafe' ? <Briefcase size={20} /> : <User size={20} />}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-semibold text-gray-900">{submission.username}</h3>
-                            <a href={`mailto:${submission.email}`} className="text-sm text-indigo-600 hover:underline flex items-center">
-                              <Mail size={14} className="mr-1" />
-                              {submission.email}
-                            </a>
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            <span className="text-xs text-gray-500 flex items-center">
-                              <Calendar size={14} className="mr-1" />
-                              {formatDate(submission.createdAt)}
-                            </span>
-                            <button
-                              onClick={() => openModal(() => handleDelete(submission._id), 'Delete Submission?', 'Are you sure you want to delete this message? This action is permanent.')}
-                              className="text-gray-400 hover:text-red-600 transition-colors"
-                              title="Delete this submission"
-                            >
-                              <Trash2 size={18} />
-                            </button>
-                          </div>
+            <div className="flex items-center gap-3">
+                <div className="flex bg-white p-1 rounded-lg border border-gray-200">
+                    {['all', 'user', 'cafe'].map(f => (
+                        <button 
+                            key={f} 
+                            onClick={() => setFilter(f)} 
+                            className={`px-4 py-1.5 rounded-md text-sm font-medium transition ${filter === f ? 'bg-gray-800 text-white' : 'text-gray-500 hover:text-gray-900'}`}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                {submissions.length > 0 && (
+                    <button 
+                        onClick={() => openModal(handleDeleteAll, 'Clear Inbox?', 'This will permanently remove all messages.')}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition" 
+                        title="Delete All"
+                    >
+                        <Trash2 className="w-5 h-5" />
+                    </button>
+                )}
+            </div>
+        </div>
+
+        <div className="grid gap-4">
+            {filtered.length > 0 ? filtered.map(sub => (
+                <div key={sub._id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all group">
+                    <div className="flex items-start gap-4">
+                        <div className={`p-3 rounded-xl shrink-0 ${sub.type === 'cafe' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
+                            {sub.type === 'cafe' ? <Briefcase className="w-5 h-5" /> : <User className="w-5 h-5" />}
                         </div>
-                        <p className="text-sm text-gray-600 mt-2 font-medium flex items-center">
-                          <MessageSquare size={14} className="mr-2" />
-                          Subject: {submission.subject}
-                        </p>
-                        <p className="text-sm text-gray-800 mt-2 p-3 bg-gray-50 rounded-md whitespace-pre-wrap">{submission.message}</p>
-                      </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-start mb-1">
+                                <h3 className="font-bold text-gray-800">{sub.username}</h3>
+                                <div className="flex items-center gap-3">
+                                    <span className="text-xs text-gray-400 font-medium flex items-center gap-1">
+                                        <Calendar className="w-3 h-3" /> {formatDate(sub.createdAt)}
+                                    </span>
+                                    <button onClick={() => openModal(() => handleDelete(sub._id), 'Delete Message?', 'This action cannot be undone.')} className="text-gray-300 hover:text-red-500 transition">
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+                                <Mail className="w-3 h-3" /> {sub.email}
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                <p className="text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                                    <MessageSquare className="w-4 h-4 text-gray-400" /> {sub.subject}
+                                </p>
+                                <p className="text-sm text-gray-600 whitespace-pre-wrap leading-relaxed">{sub.message}</p>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-gray-500 py-8">No submissions to display.</p>
-              )}
-            </div>
-          </div>
+                </div>
+            )) : (
+                <div className="text-center py-20 text-gray-400">No messages found.</div>
+            )}
         </div>
       </div>
     </>
   );
 };
-
 export default ContactSubmissionsPage;

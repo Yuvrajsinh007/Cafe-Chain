@@ -3,13 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { getActivityLog } from "../../api/api";
 import Loader from "../../components/Loader";
-import { ArrowLeft, TrendingUp, TrendingDown, Calendar } from "lucide-react";
-
-// ✨ Card animation
-const cardVariants = {
-  rest: { scale: 1, boxShadow: "0 4px 24px rgba(0,0,0,0.08)" },
-  hover: { scale: 1.05, boxShadow: "0 8px 40px rgba(0,0,0,0.15)" },
-};
+import { ArrowLeft, TrendingUp, TrendingDown, Calendar, History, ArrowUpRight, ArrowDownLeft } from "lucide-react";
 
 function ActivityLogPage() {
   const navigate = useNavigate();
@@ -24,7 +18,6 @@ function ActivityLogPage() {
         const response = await getActivityLog(timeFilter);
         setTransactions(response.data);
       } catch (error) {
-        console.error("Failed to fetch activity log", error);
         setTransactions([]);
       } finally {
         setIsLoading(false);
@@ -44,75 +37,106 @@ function ActivityLogPage() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-white via-[#fdf8f4] to-[#f3ece6] px-6 md:px-12 py-12">
-      {/* 🔙 Back Button */}
-  <button
-  onClick={() => navigate(-1)}
-  className="absolute top-6 left-6 flex items-center gap-2 text-[#4a3a2f] hover:text-black transition text-base md:text-lg font-medium
-             border-none outline-none focus:outline-none focus:ring-0 active:outline-none active:ring-0 focus-visible:outline-none bg-transparent"
->
-  <ArrowLeft size={22} /> Back
-</button>
-
-
-      {/* ✨ Page Title */}
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="text-4xl md:text-5xl font-extrabold text-center text-[#2b1d14] mb-10 md:mb-14 tracking-tight"
-      >
-        Activity Log
-        <span className="block text-lg md:text-xl font-medium text-[#6b5649] mt-3">
-          Your Points Summary
-        </span>
-      </motion.h1>
-
-      {/* ⏳ Time Filter */}
-      <div className="max-w-md mx-auto mb-12">
-        <label htmlFor="timeFilter" className="flex items-center gap-2 text-sm font-semibold text-[#4a3a2f] mb-3">
-          <Calendar size={18} /> Time Period
-        </label>
-        <select
-          id="timeFilter"
-          value={timeFilter}
-          onChange={(e) => setTimeFilter(e.target.value)}
-          className="block w-full pl-4 pr-10 py-3 text-base border border-[#c2b6aa] focus:outline-none focus:ring-2 focus:ring-[#4a3a2f] sm:text-sm rounded-xl bg-white shadow"
+    <div className="min-h-screen bg-[#FDFBF7] p-6 lg:p-12 font-sans text-gray-800">
+      
+      {/* Header */}
+      <div className="max-w-5xl mx-auto mb-10">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors mb-6 font-medium"
         >
-          <option value="today">Today</option>
-          <option value="week">This Week</option>
-          <option value="month">This Month</option>
-          <option value="all">All Time</option>
-        </select>
+          <ArrowLeft className="w-5 h-5" /> Back
+        </button>
+
+        <div className="flex flex-col md:flex-row justify-between items-end gap-6">
+            <div>
+                <h1 className="text-3xl md:text-4xl font-extrabold text-[#4A3A2F] tracking-tight">Activity Log</h1>
+                <p className="text-gray-500 mt-2 text-lg">Track your cafe's points history</p>
+            </div>
+            
+            <div className="relative w-full md:w-48">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                </div>
+                <select
+                    value={timeFilter}
+                    onChange={(e) => setTimeFilter(e.target.value)}
+                    className="block w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 text-sm font-medium text-gray-700 shadow-sm appearance-none cursor-pointer hover:border-gray-300 transition-colors"
+                >
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                    <option value="all">All Time</option>
+                </select>
+            </div>
+        </div>
       </div>
 
-      {/* 📊 Points Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-        {/* ✅ Earned Points */}
-        <motion.div
-          whileHover="hover"
-          initial="rest"
-          animate="rest"
-          variants={cardVariants}
-          className="flex flex-col justify-center items-center bg-gradient-to-br from-green-50 via-white to-green-100 text-[#1d3a29] rounded-3xl shadow-lg p-10 md:p-14 h-56 border border-green-200"
-        >
-          <TrendingUp size={36} className="text-green-600 mb-4" />
-          <p className="text-base md:text-lg font-medium opacity-90">Points Earned</p>
-          <h2 className="text-5xl md:text-6xl font-extrabold mt-4">{totalPointsEarned}</h2>
-        </motion.div>
+      <div className="max-w-5xl mx-auto space-y-8">
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 relative overflow-hidden group">
+                <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                    <TrendingUp className="w-24 h-24 text-green-600" />
+                </div>
+                <div className="relative z-10">
+                    <div className="flex items-center gap-2 text-green-700 font-bold text-sm uppercase tracking-wide mb-2">
+                        <ArrowUpRight className="w-4 h-4" /> Points Issued
+                    </div>
+                    <h2 className="text-4xl font-black text-gray-800">{totalPointsEarned}</h2>
+                </div>
+            </div>
 
-        {/* ❌ Redeemed Points */}
-        <motion.div
-          whileHover="hover"
-          initial="rest"
-          animate="rest"
-          variants={cardVariants}
-          className="flex flex-col justify-center items-center bg-gradient-to-br from-red-50 via-white to-red-100 text-[#4a1d1d] rounded-3xl shadow-lg p-10 md:p-14 h-56 border border-red-200"
-        >
-          <TrendingDown size={36} className="text-red-600 mb-4" />
-          <p className="text-base md:text-lg font-medium opacity-90">Points Redeemed</p>
-          <h2 className="text-5xl md:text-6xl font-extrabold mt-4">{totalPointsRedeemed}</h2>
-        </motion.div>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-red-100 relative overflow-hidden group">
+                <div className="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                    <TrendingDown className="w-24 h-24 text-red-600" />
+                </div>
+                <div className="relative z-10">
+                    <div className="flex items-center gap-2 text-red-700 font-bold text-sm uppercase tracking-wide mb-2">
+                        <ArrowDownLeft className="w-4 h-4" /> Points Redeemed
+                    </div>
+                    <h2 className="text-4xl font-black text-gray-800">{totalPointsRedeemed}</h2>
+                </div>
+            </div>
+        </div>
+
+        {/* Transactions List */}
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden min-h-[400px]">
+            {transactions.length > 0 ? (
+                <div className="divide-y divide-gray-100">
+                    {transactions.map((t, idx) => (
+                        <div key={idx} className="p-6 flex items-center justify-between hover:bg-[#FDFBF7] transition-colors group">
+                            <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${
+                                    t.type === 'earn' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+                                }`}>
+                                    {t.type === 'earn' ? <ArrowUpRight className="w-6 h-6" /> : <ArrowDownLeft className="w-6 h-6" />}
+                                </div>
+                                <div>
+                                    <p className="font-bold text-gray-800 text-lg group-hover:text-[#4A3A2F] transition-colors">
+                                        {t.type === 'earn' ? 'Points Issued' : 'Reward Redemption'}
+                                    </p>
+                                    <p className="text-sm text-gray-500">{new Date(t.createdAt).toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div className={`text-xl font-bold ${
+                                t.type === 'earn' ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                                {t.type === 'earn' ? '+' : '-'}{Math.abs(t.points)} XP
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="flex flex-col items-center justify-center h-96 text-gray-400">
+                    <History className="w-16 h-16 mb-4 opacity-20" />
+                    <p className="text-lg font-medium">No activity found</p>
+                    <p className="text-sm">Try changing the time filter.</p>
+                </div>
+            )}
+        </div>
+
       </div>
     </div>
   );

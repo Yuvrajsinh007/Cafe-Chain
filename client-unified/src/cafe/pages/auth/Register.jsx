@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Mail, Lock, Phone, Eye, EyeOff, Coffee, Star, Users, Zap, Shield, User as UserIcon, Home as CafeIcon, FileText, Clock } from 'lucide-react';
 import Loader from '../../components/Loader';
 import { registerCafeRequest } from '../../api/api'; // Import API function
