@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const apiClient = async (endpoint, data = {}, options = {}) => {
   const token = localStorage.getItem('authToken');
@@ -75,6 +75,8 @@ export const getActiveEvents = async () => {
     throw error;
   }
 };
+
+export const getAnnouncements = () => apiClient('/users/announcements', {}, { method: 'GET' });
 
 // --- Points & Invoices ---
 export const getUserCafePoints = (phone) => apiClient(`/users/cafe-points/${phone}`, {}, { method: "GET" });

@@ -5,6 +5,7 @@ const User = require("../models/User");
 const Cafe = require("../models/Cafe");
 const Event = require('../models/Event');
 const ContactUs = require('../models/ContactUs');
+const Announcement = require("../models/Announcement");
 const crypto = require("crypto");
 const RewardClaim = require("../models/RewardClaim");
 const cloudinary = require('../config/cloudinary');
@@ -405,6 +406,31 @@ exports.createEvent = async (req, res) => {
   } catch (error) {
     console.error('Error creating event:', error);
     res.status(500).json({ error: 'Server error while creating the event.' });
+  }
+};
+
+exports.createAnnouncement = async (req, res) => {
+  try {
+    const { title, body } = req.body;
+    if (!title || !body) {
+      return res.status(400).json({ error: "Title and Body are required." });
+    }
+
+    const announcement = await Announcement.create({ title, body });
+    res.status(201).json(announcement);
+  } catch (error) {
+    console.error("Create Announcement Error:", error);
+    res.status(500).json({ error: "Server error creating announcement" });
+  }
+};
+
+exports.deleteAnnouncement = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Announcement.findByIdAndDelete(id);
+    res.json({ message: "Announcement deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Server error deleting announcement" });
   }
 };
 

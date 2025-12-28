@@ -1,6 +1,6 @@
 import React from "react";
 import PromotionsManager from "../components/PromotionsManager";
-import AnnouncementForm from "../components/AnnouncementForm";
+// import AnnouncementForm from "../components/AnnouncementForm";
 
 export default function PromotionsPage() {
   return (
@@ -8,7 +8,7 @@ export default function PromotionsPage() {
       <h1 className="text-2xl font-bold mb-6">Promotions & Announcements</h1>
       <PromotionsManager />
       <div className="my-8" />
-      <AnnouncementForm />
+      {/* <AnnouncementForm /> */}
     </div>
   );
 }

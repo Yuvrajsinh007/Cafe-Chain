@@ -20,7 +20,9 @@ const {
     getContactSubmissions,
     deleteContactSubmission,
     deleteAllContactSubmissions,
-    getDashboardStats
+    getDashboardStats,
+    createAnnouncement, 
+    deleteAnnouncement
 } = require("../controllers/adminController");
 const upload = require('../middlewares/multerUpload'); 
 
@@ -50,6 +52,9 @@ router.put("/cafes/:id/approve", approveCafe);
 router.delete("/cafes/:id/reject", rejectCafe);
 
 router.post("/events", upload.single('image'), createEvent);
+
+router.post("/announcements", createAnnouncement);
+router.delete("/announcements/:id", deleteAnnouncement);
 
 router.get('/contact-submissions', getContactSubmissions);
 router.delete('/contact-submissions/:id', deleteContactSubmission);

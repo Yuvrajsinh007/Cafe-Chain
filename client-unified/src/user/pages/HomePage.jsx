@@ -6,9 +6,8 @@ import { getProfile, getInvoiceHistory, getCafes } from "../api/api";
 import Loader from "../components/Loader";
 import CafeCard from "../components/CafeCard";
 import UpcomingEvents from "../components/UpcomingEvents";
-import { Search, Heart, Users, Gift, ExternalLink ,Coffee,Megaphone  } from "lucide-react";
-
-
+import GlobalAnnouncementBanner from "../components/GlobalAnnouncementBanner";
+import { Search, Heart, Users, Gift, Coffee } from "lucide-react"; // Removed unused Megaphone
 
 // ============================================================
 // Animated Background Balls Component
@@ -17,7 +16,6 @@ const AnimatedBalls = () => {
   const [balls, setBalls] = useState([]);
 
   useEffect(() => {
-    // Only run on the client-side
     if (typeof window === 'undefined') return;
 
     const ballsData = Array.from({ length: 15 }, (_, i) => ({
@@ -55,8 +53,6 @@ const AnimatedBalls = () => {
     return () => clearInterval(interval);
   }, []);
 
-  
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {balls.map(ball => (
@@ -84,7 +80,6 @@ const AnimatedBalls = () => {
     </div>
   );
 };
-
 
 // ============================================================
 // Animated Subtitle for Hero
@@ -153,19 +148,8 @@ const HomePage = () => {
   const [activities, setActivities] = useState([]);
   const [cafes, setCafes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const announcements = [
-    "🎉 CafeChain is launching exciting new rewards next week!",
-    "☕ Enjoy 20% off at our partner cafes this weekend!",
-    "🏆 Refer friends & earn bonus CashPoints instantly.",
-  ];
-  const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % announcements.length);
-    }, 5000); // 5 sec delay
-    return () => clearInterval(interval);
-  }, [announcements.length]);
+  // Note: Hardcoded announcements logic removed in favor of GlobalAnnouncementBanner component
 
   useEffect(() => {
     const fetchData = async () => {
@@ -252,7 +236,6 @@ const HomePage = () => {
     },
   ];
 
-
   const animatedMessages = [
     "Discover amazing cafes !!",
     "Earn rewards with every sip",
@@ -283,34 +266,30 @@ const HomePage = () => {
           <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6">Welcome to CafeChain</h1>
           <AnimatedHeaderSubtitle lines={animatedMessages} />
 
- <div className="inline-block max-w-md mx-auto mb-10">
-  <div className="bg-white rounded-3xl shadow-2xl p-6 text-[#4a3a2f]">
-    <div className="flex items-center">
-      <div className="w-24 h-24 bg-white flex items-center justify-center rounded-2xl mr-6">
-        <Coffee className="w-12 h-12 text-[#4a3a2f]" strokeWidth={2} />
-      </div>
-      <div className="text-left">
-        <p className="text-sm text-gray-500">Your XP</p>
-        <h2 className="text-5xl font-extrabold">{points.toLocaleString()}</h2>
-      </div>
-    </div>
-  </div>
-</div>
+          <div className="inline-block max-w-md mx-auto mb-10">
+            <div className="bg-white rounded-3xl shadow-2xl p-6 text-[#4a3a2f]">
+              <div className="flex items-center">
+                <div className="w-24 h-24 bg-white flex items-center justify-center rounded-2xl mr-6">
+                  <Coffee className="w-12 h-12 text-[#4a3a2f]" strokeWidth={2} />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm text-gray-500">Your XP</p>
+                  <h2 className="text-5xl font-extrabold">{points.toLocaleString()}</h2>
+                </div>
+              </div>
+            </div>
+          </div>
 
-
-
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
-  <Link to="/user/cafes" className="flex items-center justify-center gap-3 bg-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 shadow-lg transition-colors">
-    <Search className="w-6 h-6 text-black" strokeWidth={2} />
-    <span>Find Cafes</span>
-  </Link>
-  <Link to="/user/claim-reward" className="flex items-center justify-center gap-3 bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 shadow-lg transition-colors">
-    <Gift className="w-10 h-10 text-white" strokeWidth={2} />
-    <span>Redeem Rewards</span>
-  </Link>
-</div>
-
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+            <Link to="/user/cafes" className="flex items-center justify-center gap-3 bg-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 shadow-lg transition-colors">
+              <Search className="w-6 h-6 text-black" strokeWidth={2} />
+              <span>Find Cafes</span>
+            </Link>
+            <Link to="/user/claim-reward" className="flex items-center justify-center gap-3 bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 shadow-lg transition-colors">
+              <Gift className="w-10 h-10 text-white" strokeWidth={2} />
+              <span>Redeem Rewards</span>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -331,42 +310,13 @@ const HomePage = () => {
         </div>
       </motion.section>
 
-      {/* === Announcements Section === */}
-        <motion.section
-          className="py-6 bg-[#4A3A2F]"
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <div className="max-w-7xl mx-auto px-4">
-            <h2 className="flex items-center justify-center gap-3 text-3xl font-bold text-white text-center mb-6">
-              <Megaphone className="w-8 h-8 text-amber-400" /> Announcements
-            </h2>
-
-            {/* Slider effect with pause */}
-            <div className="relative w-full overflow-hidden text-center">
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={currentIndex}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6 }}
-                  className="text-white text-lg font-medium flex items-center justify-center gap-2"
-                >
-                  <Megaphone className="w-5 h-5 text-amber-400" />
-                    {announcements[currentIndex]}
-                    </motion.p>
-                  </AnimatePresence>
-                </div>
-              </div>
-            </motion.section>
+      {/* === Dynamic Global Announcement Section === */}
+      <GlobalAnnouncementBanner />
 
       {/* === Upcoming Events Section === */}
       <UpcomingEvents />
 
-       {/* === Featured Cafes === */}
+      {/* === Featured Cafes === */}
       <motion.section className="py-20 bg-white" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
@@ -433,11 +383,6 @@ const HomePage = () => {
           </motion.div>
         </div>
       </motion.section>
-
-
-
-
-     
 
       {/* === Recent Activity === */}
       <motion.section
@@ -523,17 +468,16 @@ const HomePage = () => {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-5xl font-bold text-white mb-6">Ready to Start Earning?</h2>
           <p className="text-xl text-amber-200 mb-12">Join CafeChain today and transform every coffee purchase into valuable rewards.</p>
-        <div className="flex flex-col sm:flex-row gap-6 justify-center">
-  <Link to="/user/cafes" className="bg-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-gray-100 shadow-xl text-[#4A3A2F] transition-transform hover:scale-105 flex items-center justify-center gap-3">
-    <Search className="w-6 h-6 text-black" strokeWidth={2} />
-    <span>Explore Cafes</span>
-  </Link>
-  <Link to="/user/rewards" className="bg-amber-600 text-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-amber-700 shadow-xl transition-transform hover:scale-105 flex items-center justify-center gap-3">
-    <Gift className="w-6 h-6 text-white" strokeWidth={2} />
-    <span>Redeem Points</span>
-  </Link>
-</div>
-
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Link to="/user/cafes" className="bg-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-gray-100 shadow-xl text-[#4A3A2F] transition-transform hover:scale-105 flex items-center justify-center gap-3">
+              <Search className="w-6 h-6 text-black" strokeWidth={2} />
+              <span>Explore Cafes</span>
+            </Link>
+            <Link to="/user/rewards" className="bg-amber-600 text-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-amber-700 shadow-xl transition-transform hover:scale-105 flex items-center justify-center gap-3">
+              <Gift className="w-6 h-6 text-white" strokeWidth={2} />
+              <span>Redeem Points</span>
+            </Link>
+          </div>
         </div>
       </motion.section>
     </div>

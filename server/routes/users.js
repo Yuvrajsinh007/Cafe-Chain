@@ -16,6 +16,7 @@ const {
     getFavoriteCafes,
     getLeaderboard,
     testEmail,
+    getActiveAnnouncements,
     submitContactForm  
 } = require("../controllers/userController");
 
@@ -41,6 +42,8 @@ router.post("/favorites/:phone", authenticateUserJWT, addFavoriteCafe);
 router.get("/favorites/:phone", authenticateUserJWT, getFavoriteCafes);
 router.get("/leaderboard", getLeaderboard); 
 router.get('/test-email', testEmail);
+
+router.get("/announcements", getActiveAnnouncements);
 
 router.post('/contact-us', authenticateUserJWT, submitContactForm);
 

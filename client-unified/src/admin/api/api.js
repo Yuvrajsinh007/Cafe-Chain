@@ -3,7 +3,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const adminApiClient = axios.create({
   baseURL: `${API_BASE_URL}/admin`, 
@@ -162,6 +162,33 @@ export const adminRejectClaim = async (id) => {
   } catch (err) {
     toast.error(err.response?.data?.error || "Failed to reject claim");
     throw err;
+  }
+};
+
+export const createAnnouncement = async (data) => {
+  try {
+    const response = await adminApiClient.post('/announcements', data);
+    toast.success('Announcement Posted! 📢');
+    return response.data;
+  } catch (error) {
+    toast.error('Failed to post announcement.');
+    throw error;
+  }
+};
+
+export const adminGetAnnouncements = async () => {
+  const response = await axios.get(`${API_BASE_URL}/users/announcements`);
+  return response.data;
+};
+
+export const adminDeleteAnnouncement = async (id) => {
+  try {
+    const { data } = await adminApiClient.delete(`/announcements/${id}`);
+    toast.success('Announcement deleted successfully');
+    return data;
+  } catch (error) {
+    toast.error('Failed to delete announcement');
+    throw error;
   }
 };
 

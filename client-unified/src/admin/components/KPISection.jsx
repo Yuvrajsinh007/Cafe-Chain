@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { adminGetDashboardStats } from "../api/api"; // Import the fetch function
+import { adminGetDashboardStats } from "../api/api";
+import { Users, Store, Coffee, Clock } from "lucide-react";
 
 export default function KPISection() {
   const [stats, setStats] = useState({
@@ -26,48 +27,64 @@ export default function KPISection() {
     fetchStats();
   }, []);
 
-  if (loading) {
-    return <div className="p-6 text-center text-gray-500">Loading dashboard statistics...</div>;
-  }
+  const Card = ({ title, value, subtext, icon: Icon, colorClass, onClick, borderClass }) => (
+    <div 
+        onClick={onClick}
+        className={`bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer ${borderClass}`}
+    >
+        <div className="flex justify-between items-start z-10 relative">
+            <div>
+                <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>
+                <h3 className="text-3xl font-extrabold text-gray-800">{loading ? "-" : value}</h3>
+                {subtext && <p className={`text-xs mt-2 font-medium ${colorClass}`}>{subtext}</p>}
+            </div>
+            <div className={`p-3 rounded-xl ${colorClass.replace('text-', 'bg-').replace('600', '100')} ${colorClass}`}>
+                <Icon className="w-6 h-6" />
+            </div>
+        </div>
+        {/* Background decoration */}
+        <div className={`absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110 ${colorClass}`}>
+             <Icon className="w-24 h-24" />
+        </div>
+    </div>
+  );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-      {/* Total Users */}
-      <div 
-        className="bg-white p-6 rounded shadow text-center cursor-pointer hover:bg-gray-50 transition"
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <Card 
+        title="Total Users" 
+        value={stats.totalUsers} 
+        icon={Users} 
+        colorClass="text-blue-600"
         onClick={() => navigate('/pithad/users')}
-      >
-        <div className="text-3xl font-bold text-gray-800">{stats.totalUsers}</div>
-        <div className="text-gray-500">Total Users</div>
-      </div>
-
-      {/* Registered Cafes */}
-      <div 
-        className="bg-white p-6 rounded shadow text-center cursor-pointer hover:bg-gray-50 transition"
+      />
+      
+      <Card 
+        title="Active Cafes" 
+        value={stats.totalCafes} 
+        icon={Store} 
+        colorClass="text-green-600"
+        subtext="+ Registered Partners"
         onClick={() => navigate('/pithad/cafes')}
-      >
-        <div className="text-3xl font-bold text-green-600">{stats.totalCafes}</div>
-        <div className="text-gray-500">Registered Cafes</div>
-        <div className="text-xs text-gray-400 mt-1">
-            Active Cafes
-        </div>
-      </div>
+      />
 
-      {/* Redemptions (24h) */}
-      <div className="bg-white p-6 rounded shadow text-center">
-        <div className="text-3xl font-bold text-amber-600">{stats.recentRedemptions}</div>
-        <div className="text-gray-500">Redemptions (24h)</div>
-      </div>
+      <Card 
+        title="Redemptions (24h)" 
+        value={stats.recentRedemptions} 
+        icon={Coffee} 
+        colorClass="text-amber-600"
+        subtext="Recent Activity"
+      />
 
-      {/* Pending Approvals */}
-      <div 
-        className="bg-white p-6 rounded shadow text-center cursor-pointer hover:bg-blue-50 transition border border-transparent hover:border-blue-200"
+      <Card 
+        title="Pending Approvals" 
+        value={stats.pendingCafes} 
+        icon={Clock} 
+        colorClass="text-orange-600"
+        subtext="Needs Attention"
+        borderClass="ring-2 ring-orange-100"
         onClick={() => navigate('/pithad/cafes/approval-queue')}
-      >
-        <div className="text-3xl font-bold text-blue-600">{stats.pendingCafes}</div>
-        <div className="text-gray-500">Pending Approvals</div>
-        <div className="text-xs text-blue-600 mt-1 font-medium">Click to view</div>
-      </div>
+      />
     </div>
   );
 }

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const cloudinary = require("../config/cloudinary");
 const Cafe = require("../models/Cafe");
+const Announcement = require("../models/Announcement");
 const VisitLog = require("../models/VisitLog");
 const RewardTransaction = require("../models/RewardTransaction");
 const OTP = require("../models/OTP");
@@ -636,6 +637,17 @@ exports.getLeaderboard = async (req, res) => {
       res.status(500).json({ error: "Server error" });
     }
 };  
+
+exports.getActiveAnnouncements = async (req, res) => {
+    try {
+      // Fetch active announcements, sorted by newest first
+      const announcements = await Announcement.find({ isActive: true }).sort({ createdAt: -1 });
+      res.json(announcements);
+    } catch (error) {
+      console.error("Fetch Announcements Error:", error);
+      res.status(500).json({ error: "Server error fetching announcements" });
+    }
+  };
 
 exports.submitContactForm = async (req, res) => {
     try {
