@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-// ✅ LOAD FROM ENV (Vercel/Render Production URL)
-// Fallback to localhost if the variable isn't set
 const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 const apiClient = async (endpoint, data = {}, options = {}) => {

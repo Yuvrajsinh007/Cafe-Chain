@@ -3,10 +3,10 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-// Create an Axios instance for the admin panel
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
 const adminApiClient = axios.create({
-  baseURL: `${import.meta.env.VITE_API_BASE_URL}/admin`, 
-  // baseURL: 'http://localhost:5000/api/admin', 
+  baseURL: `${API_BASE_URL}/admin`, 
 });
 
 // Interceptor to add the auth token
