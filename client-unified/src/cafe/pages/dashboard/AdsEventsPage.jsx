@@ -61,7 +61,7 @@ export default function AdsEventsPage() {
             </button>
 
             <a
-                href="https://wa.me/917575825782?text=Hello%20CafeChain%2C%20We%20are%20interested%20to%20post%20an%20event%20or%20ads!"
+                href="https://wa.me/919586895442?text=Hello%20CafeChain%2C%20We%20are%20interested%20to%20post%20an%20event%20or%20ads!"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-full font-bold shadow-lg shadow-green-500/20 hover:bg-[#20bd5a] hover:-translate-y-0.5 transition-all"
