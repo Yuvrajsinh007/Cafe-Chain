@@ -20,57 +20,58 @@ const LoginForm = ({
 
   return (
     <div>
-      <form onSubmit={onSubmit} className="space-y-3">
+      <form onSubmit={onSubmit} className="space-y-3 md:space-y-4">
         {!isMobile && (
-          <div className="text-center mb-4">
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-bold mb-1 text-[#4a3a2f]">Sign In</h2>
             <p className="text-gray-600 text-sm">Enter your credentials</p>
           </div>
         )}
 
         {/* Phone Input */}
-        <div className="space-y-2">
+        <div className="space-y-1.5 md:space-y-2">
           <label className="block text-sm font-semibold text-[#4a3a2f]">Mobile Number</label>
           <div className="relative">
-            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Phone className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={onInputChange}
               placeholder="Enter your mobile number"
-              className="w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none focus:border-gray-400"
+              // Compact padding on mobile
+              className="w-full pl-10 md:pl-12 pr-4 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:border-gray-400 text-sm md:text-base"
               maxLength="10"
             />
           </div>
         </div>
 
         {/* Password Input */}
-        <div className="space-y-2">
+        <div className="space-y-1.5 md:space-y-2">
           <label className="block text-sm font-semibold text-[#4a3a2f]">Password</label>
           <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Lock className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
             <input
               type={showPassword ? 'text' : 'password'}
               name="password"
               value={formData.password}
               onChange={onInputChange}
               placeholder="Enter your password"
-              className="w-full pl-12 pr-12 py-3 border-2 rounded-xl focus:outline-none focus:border-gray-400"
+              className="w-full pl-10 md:pl-12 pr-10 md:pr-12 py-2.5 md:py-3 border-2 rounded-lg md:rounded-xl focus:outline-none focus:border-gray-400 text-sm md:text-base"
             />
             <button
               type="button"
               onClick={onTogglePassword}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 text-gray-400"
             >
-              <PasswordIcon className="w-5 h-5" />
+              <PasswordIcon className="w-4 h-4 md:w-5 md:h-5" />
             </button>
           </div>
         </div>
 
         {/* Error */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs md:text-sm">
             {error}
           </div>
         )}
@@ -79,7 +80,7 @@ const LoginForm = ({
         <div className="text-right">
           <button
             type="button"
-            className="text-gray-600 hover:underline text-sm font-medium"
+            className="text-gray-600 hover:underline text-xs md:text-sm font-medium"
             onClick={onNavigateToForgotPassword}
           >
             Forgot Password?
@@ -90,7 +91,7 @@ const LoginForm = ({
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl font-semibold text-white transition-all disabled:opacity-50 hover:shadow-lg transform hover:scale-[1.02]"
+          className="w-full py-2.5 md:py-3 rounded-lg md:rounded-xl font-semibold text-white transition-all disabled:opacity-50 hover:shadow-lg transform hover:scale-[1.02] text-sm md:text-base"
           style={{
             backgroundColor: loading ? '#6b5b4d' : '#4a3a2f',
             boxShadow: '0 4px 20px rgba(74, 58, 47, 0.3)'
@@ -101,7 +102,7 @@ const LoginForm = ({
       </form>
 
       {/* Sign Up */}
-      <div className="text-center mt-6 pt-4 border-t border-gray-100">
+      <div className="text-center mt-4 md:mt-6 pt-3 md:pt-4 border-t border-gray-100 text-sm md:text-base">
         <span className="text-gray-600">Don't have an account? </span>
         <button
           onClick={onNavigateToSignUp}
@@ -182,7 +183,7 @@ const LoginPage = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white ">
+    <div className="min-h-screen bg-white">
       <style>{`
         .logo-border-glow {
           border: 4px solid white;
@@ -248,21 +249,25 @@ const LoginPage = ({ onNavigate }) => {
       </div>
 
       {/* Mobile */}
-      <div className="lg:hidden min-h-screen flex flex-col">
-        <div className="p-6 bg-white rounded-b-3xl">
+      <div className="lg:hidden min-h-screen flex flex-col bg-white">
+        <div className="pt-8 pb-6 px-6 bg-white rounded-b-3xl">
           <div className="text-center">
-            <h1 className="text-3xl font-bold mb-2 text-[#4a3a2f]">Welcome Back!</h1>
-            <p className="text-gray-600">Sign in to continue your coffee journey</p>
+            {/* Added Logo for mobile */}
+            <div className="inline-block p-1 mb-4">
+               <img src={logo} alt="CafeChain Logo" className="w-16 h-16 rounded-full object-cover mx-auto shadow-md" />
+            </div>
+            <h1 className="text-2xl font-bold mb-1 text-[#4a3a2f]">Welcome Back!</h1>
+            <p className="text-sm text-gray-600">Sign in to continue your coffee journey</p>
           </div>
         </div>
-        <div className="flex-1 p-6 bg-gray-50">
+        <div className="flex-1 px-6 pb-8 bg-gray-50 rounded-t-3xl pt-8 shadow-inner">
           <LoginForm {...formProps} isMobile />
 
           {/* Login as Cafe Button (Mobile) */}
-          <div className="mt-6 text-center">
+          <div className="mt-4 text-center">
             <button
               onClick={() => navigate("/cafe/auth/login")}
-              className="w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+              className="w-full py-2.5 rounded-lg font-semibold text-white transition-all duration-200 hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] text-sm"
               style={{
                 backgroundColor: "#6b4f3a",
                 boxShadow: "0 4px 15px rgba(74, 58, 47, 0.25)"

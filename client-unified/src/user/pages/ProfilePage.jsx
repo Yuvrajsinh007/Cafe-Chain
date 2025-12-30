@@ -22,14 +22,14 @@ const Modal = ({ children, closeModal }) => {
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
-        className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative"
+        className="bg-white rounded-2xl shadow-xl w-full max-w-sm md:max-w-md p-4 md:p-6 relative"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 text-gray-400 hover:text-[#4a3a2f]"
+          className="absolute top-3 right-3 text-gray-400 hover:text-[#4a3a2f]"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
         {children}
       </motion.div>
@@ -213,15 +213,15 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-[#4a3a2f] font-sans pb-24">
+    <div className="min-h-screen bg-white text-[#4a3a2f] font-sans pb-20 pt-16 md:pt-0">
       <AnimatePresence>
         {/* 2. Conditionally render modals with explicit KEYS */}
         {showEdit && (
           <Modal key="edit-modal" closeModal={() => setShowEdit(false)}>
-            <h2 className="text-2xl font-bold mb-6 text-center pt-20 md:pt-0">Edit Your Profile</h2>
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">Edit Your Profile</h2>
             <form onSubmit={handleEditProfile} className="space-y-4">
               <div className="flex flex-col items-center space-y-4">
-                <div className="relative w-32 h-32">
+                <div className="relative w-24 h-24 md:w-32 md:h-32">
                   <img
                     src={
                       selectedImage ||
@@ -229,13 +229,13 @@ const ProfilePage = () => {
                       `https://ui-avatars.com/api/?name=${profile?.name}&background=4a3a2f&color=fff&size=128`
                     }
                     alt="Profile Preview"
-                    className="w-32 h-32 rounded-full object-cover border-4 border-stone-200"
+                    className="w-full h-full rounded-full object-cover border-4 border-stone-200"
                   />
                   <label
                     htmlFor="avatarInput"
-                    className="absolute bottom-0 right-0 bg-[#4a3a2f] text-white p-2 rounded-full cursor-pointer hover:bg-opacity-90 transition-colors"
+                    className="absolute bottom-0 right-0 bg-[#4a3a2f] text-white p-1.5 md:p-2 rounded-full cursor-pointer hover:bg-opacity-90 transition-colors"
                   >
-                    <Camera size={20} />
+                    <Camera size={16} className="md:w-5 md:h-5" />
                   </label>
                   <input
                     id="avatarInput"
@@ -247,7 +247,7 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-600 mb-1">
+                <label htmlFor="name" className="block text-xs md:text-sm font-medium text-gray-600 mb-1">
                   Full Name
                 </label>
                 <input
@@ -256,14 +256,14 @@ const ProfilePage = () => {
                   value={editName}
                   onChange={(e) => setEditName(e.target.value)}
                   placeholder="Your name"
-                  className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f] focus:border-[#4a3a2f] transition"
+                  className="w-full px-3 py-2 md:px-4 md:py-3 text-sm md:text-base border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f] focus:border-[#4a3a2f] transition"
                 />
               </div>
-              {editError && <div className="text-red-500 text-sm text-center">{editError}</div>}
-              {editSuccess && <div className="text-green-600 text-sm text-center">{editSuccess}</div>}
+              {editError && <div className="text-red-500 text-xs md:text-sm text-center">{editError}</div>}
+              {editSuccess && <div className="text-green-600 text-xs md:text-sm text-center">{editSuccess}</div>}
               <button
                 disabled={saving}
-                className="w-full bg-[#4a3a2f] text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md disabled:bg-opacity-50"
+                className="w-full bg-[#4a3a2f] text-white py-2.5 md:py-3 rounded-lg text-sm md:text-base font-semibold hover:bg-opacity-90 transition-all shadow-md disabled:bg-opacity-50"
               >
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
@@ -273,34 +273,34 @@ const ProfilePage = () => {
 
         {showChangePwd && (
           <Modal key="pwd-modal" closeModal={() => setShowChangePwd(false)}>
-            <h2 className="text-2xl font-bold mb-6 text-center">Change Password</h2>
-            <form onSubmit={handleChangePassword} className="space-y-4">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center">Change Password</h2>
+            <form onSubmit={handleChangePassword} className="space-y-3 md:space-y-4">
               <input
                 name="currentPassword"
                 type="password"
                 placeholder="Current Password"
                 required
-                className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f]"
+                className="w-full px-3 py-2 md:px-4 md:py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f]"
               />
               <input
                 name="newPassword"
                 type="password"
                 placeholder="New Password"
                 required
-                className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f]"
+                className="w-full px-3 py-2 md:px-4 md:py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f]"
               />
               <input
                 name="confirmNewPassword"
                 type="password"
                 placeholder="Confirm New Password"
                 required
-                className="w-full px-4 py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f]"
+                className="w-full px-3 py-2 md:px-4 md:py-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-[#4a3a2f]"
               />
-              {pwdError && <div className="text-red-500 text-sm text-center">{pwdError}</div>}
-              {pwdSuccess && <div className="text-green-600 text-sm text-center">{pwdSuccess}</div>}
+              {pwdError && <div className="text-red-500 text-xs md:text-sm text-center">{pwdError}</div>}
+              {pwdSuccess && <div className="text-green-600 text-xs md:text-sm text-center">{pwdSuccess}</div>}
               <button
                 disabled={changingPwd}
-                className="w-full bg-[#4a3a2f] text-white py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all shadow-md disabled:bg-opacity-50"
+                className="w-full bg-[#4a3a2f] text-white py-2.5 md:py-3 rounded-lg text-sm md:text-base font-semibold hover:bg-opacity-90 transition-all shadow-md disabled:bg-opacity-50"
               >
                 {changingPwd ? 'Changing...' : 'Update Password'}
               </button>
@@ -309,43 +309,43 @@ const ProfilePage = () => {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Profile</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-2 text-[#4A3A2F]">Profile</h1>
         </motion.div>
 
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile card */}
+        <div className="mt-6 md:mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+          {/* Profile card - Reduced Padding & Image Size */}
           <motion.div
-            className="lg:col-span-1 space-y-8"
+            className="lg:col-span-1 space-y-6 md:space-y-8"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <div className="bg-stone-50 rounded-2xl p-8 text-center shadow-sm border border-stone-200">
-              <div className="relative w-32 h-32 mx-auto">
+            <div className="bg-stone-50 rounded-2xl p-6 md:p-8 text-center shadow-sm border border-stone-200">
+              <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto">
                 <img
                   src={
                     profile?.profilePic ||
                     `https://ui-avatars.com/api/?name=${profile?.name}&background=4a3a2f&color=fff&size=128`
                   }
                   alt="Profile Avatar"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-md"
+                  className="w-full h-full rounded-full object-cover border-4 border-white shadow-md"
                 />
               </div>
-              <h2 className="mt-4 text-2xl font-bold">
+              <h2 className="mt-3 md:mt-4 text-xl md:text-2xl font-bold">
                 {profile?.name || 'Your Name'}
               </h2>
-              <p className="text-gray-500">
+              <p className="text-sm md:text-base text-gray-500">
                 {profile?.email || 'your@email.com'}
               </p>
               {profile?.createdAt && (
-                <p className="mt-1 text-sm text-gray-400">
-                  Joined on: {new Date(profile.createdAt).toLocaleDateString()}
+                <p className="mt-1 text-xs md:text-sm text-gray-400">
+                  Joined: {new Date(profile.createdAt).toLocaleDateString()}
                 </p>
               )}
             </div>
@@ -353,141 +353,129 @@ const ProfilePage = () => {
 
           {/* Right side */}
           <motion.div
-            className="lg:col-span-2 space-y-8"
+            className="lg:col-span-2 space-y-6 md:space-y-8"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            {/* Stats */}
-            <div className="bg-stone-50 rounded-2xl p-6 shadow-sm border border-stone-200">
-              <h3 className="text-lg font-bold mb-4">Your Stats</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-white p-6 rounded-lg border border-stone-200 text-center">
-                  <Award className="w-8 h-8 mx-auto text-[#4a3a2f] mb-2" />
-                  <p className="text-3xl font-extrabold">{profile?.xp ?? 0}</p>
-                  <p className="text-sm text-gray-500">XP </p>
+            {/* Stats - Compact */}
+            <div className="bg-stone-50 rounded-2xl p-4 md:p-6 shadow-sm border border-stone-200">
+              <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4">Your Stats</h3>
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
+                <div className="bg-white p-4 md:p-6 rounded-xl border border-stone-200 text-center">
+                  <Award className="w-6 h-6 md:w-8 md:h-8 mx-auto text-[#4a3a2f] mb-1 md:mb-2" />
+                  <p className="text-2xl md:text-3xl font-extrabold">{profile?.xp ?? 0}</p>
+                  <p className="text-xs md:text-sm text-gray-500">XP Points</p>
                 </div>
-                <div className="bg-white p-6 rounded-lg border border-stone-200 text-center">
-                  <Users className="w-8 h-8 mx-auto text-[#4a3a2f] mb-2" />
-                  <p className="text-3xl font-extrabold">
+                <div className="bg-white p-4 md:p-6 rounded-xl border border-stone-200 text-center">
+                  <Users className="w-6 h-6 md:w-8 md:h-8 mx-auto text-[#4a3a2f] mb-1 md:mb-2" />
+                  <p className="text-2xl md:text-3xl font-extrabold">
                     {profile?.referralChildren?.length ?? 0}
                   </p>
-                  <p className="text-sm text-gray-500">Referrals</p>
+                  <p className="text-xs md:text-sm text-gray-500">Referrals</p>
                 </div>
               </div>
             </div>
 
-            {/* Quick links */}
-            <div className="bg-stone-50 rounded-2xl p-6 shadow-sm border border-stone-200">
-              <h3 className="text-lg font-bold mb-4">Quick Links</h3>
-              <div className="space-y-3">
+            {/* Quick links - Reduced Height */}
+            <div className="bg-stone-50 rounded-2xl p-4 md:p-6 shadow-sm border border-stone-200">
+              <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4">Quick Links</h3>
+              <div className="space-y-2 md:space-y-3">
                 <Link
                   to="/user/invoice-history"
-                  className="group flex items-center justify-between p-4 rounded-lg bg-white hover:bg-[#4a3a2f] hover:text-white transition-colors border border-stone-200"
+                  className="group flex items-center justify-between p-3 md:p-4 rounded-xl bg-white hover:bg-[#4a3a2f] hover:text-white transition-colors border border-stone-200"
                 >
                   <div>
-                    <div className="font-semibold">Invoice History</div>
-                    <p className="text-sm text-gray-500 group-hover:text-stone-300">
-                      Review your past cafe check-ins.
+                    <div className="font-semibold text-sm md:text-base">Invoice History</div>
+                    <p className="text-xs md:text-sm text-gray-500 group-hover:text-stone-300">
+                      Review past check-ins
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-white" />
                 </Link>
 
                 <Link
                   to="/user/points-history"
-                  className="group flex items-center justify-between p-4 rounded-lg bg-white hover:bg-[#4a3a2f] hover:text-white transition-colors border border-stone-200"
+                  className="group flex items-center justify-between p-3 md:p-4 rounded-xl bg-white hover:bg-[#4a3a2f] hover:text-white transition-colors border border-stone-200"
                 >
                   <div>
-                    <div className="font-semibold">Points History</div>
-                    <p className="text-sm text-gray-500 group-hover:text-stone-300">
-                      Track your points.
+                    <div className="font-semibold text-sm md:text-base">Points History</div>
+                    <p className="text-xs md:text-sm text-gray-500 group-hover:text-stone-300">
+                      Track your points
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-white" />
                 </Link>
 
-                <a
-                  href="/user/rewards"
-                  className="group flex items-center justify-between p-4 rounded-lg bg-white hover:bg-[#4a3a2f] hover:text-white transition-colors border border-stone-200"
+                <Link
+                  to="/user/rewards"
+                  className="group flex items-center justify-between p-3 md:p-4 rounded-xl bg-white hover:bg-[#4a3a2f] hover:text-white transition-colors border border-stone-200"
                 >
                   <div>
-                    <div className="font-semibold">Refer & Earn</div>
-                    <p className="text-sm text-gray-500 group-hover:text-stone-300">
-                      Share with friends to earn bonus points.
+                    <div className="font-semibold text-sm md:text-base">Refer & Earn</div>
+                    <p className="text-xs md:text-sm text-gray-500 group-hover:text-stone-300">
+                      Share with friends
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-white" />
-                </a>
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-white" />
+                </Link>
               </div>
             </div>
 
             {/* Account settings */}
-            <div className="bg-stone-50 rounded-2xl p-6 shadow-sm border border-stone-200">
-              <h3 className="text-lg font-bold mb-4">Account Settings</h3>
-              <div className="space-y-3">
+            <div className="bg-stone-50 rounded-2xl p-4 md:p-6 shadow-sm border border-stone-200">
+              <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4">Account Settings</h3>
+              <div className="space-y-2 md:space-y-3">
                 <button
                   onClick={() => setShowEdit(true)}
-                  className="w-full flex items-center justify-between text-left p-4 rounded-lg hover:bg-stone-200 transition-colors"
+                  className="w-full flex items-center justify-between text-left p-3 md:p-4 rounded-xl hover:bg-stone-200 transition-colors"
                 >
                   <div className="flex items-center space-x-3">
-                    <User className="w-5 h-5 text-gray-500" />
-                    <span className="font-semibold">Edit Profile</span>
+                    <User className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
+                    <span className="font-semibold text-sm md:text-base">Edit Profile</span>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                 </button>
-
-                {/* ADDED: Change Password Button */}
-                {/* <button
-                  onClick={() => setShowChangePwd(true)}
-                  className="w-full flex items-center justify-between text-left p-4 rounded-lg hover:bg-stone-200 transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    <Shield className="w-5 h-5 text-gray-500" />
-                    <span className="font-semibold">Change Password</span>
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400" />
-                </button> */}
 
                 <Link
                   to="/user/privacy-policy"
-                  className="w-full flex items-center justify-between text-left p-4 rounded-lg hover:bg-stone-200 transition-colors"
+                  className="w-full flex items-center justify-between text-left p-3 md:p-4 rounded-xl hover:bg-stone-200 transition-colors"
                 >
                   <div className="flex items-center space-x-3">
-                    <Shield className="w-5 h-5 text-gray-500" />
-                    <span className="font-semibold">Privacy Policy</span>
+                    <Shield className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
+                    <span className="font-semibold text-sm md:text-base">Privacy Policy</span>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                 </Link>
 
                 <Link
                   to="/user/terms-and-conditions"
-                  className="w-full flex items-center justify-between text-left p-4 rounded-lg hover:bg-stone-200 transition-colors"
+                  className="w-full flex items-center justify-between text-left p-3 md:p-4 rounded-xl hover:bg-stone-200 transition-colors"
                 >
                   <div className="flex items-center space-x-3">
-                    <FileText className="w-5 h-5 text-gray-500" />
-                    <span className="font-semibold">Terms & Conditions</span>
+                    <FileText className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
+                    <span className="font-semibold text-sm md:text-base">Terms & Conditions</span>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                 </Link>
 
                 <Link
                   to="/user/contactus"
-                  className="w-full flex items-center justify-between text-left p-4 rounded-lg hover:bg-stone-200 transition-colors"
+                  className="w-full flex items-center justify-between text-left p-3 md:p-4 rounded-xl hover:bg-stone-200 transition-colors"
                 >
                   <div className="flex items-center space-x-3">
-                    <User className="w-5 h-5 text-gray-500" />
-                    <span className="font-semibold">Contact Us</span>
+                    <User className="w-4 h-4 md:w-5 md:h-5 text-gray-500" />
+                    <span className="font-semibold text-sm md:text-base">Contact Us</span>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400" />
+                  <ArrowRight className="w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                 </Link>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center space-x-3 text-left p-4 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                  className="w-full flex items-center space-x-3 text-left p-3 md:p-4 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-semibold">Logout</span>
+                  <LogOut className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="font-semibold text-sm md:text-base">Logout</span>
                 </button>
               </div>
             </div>

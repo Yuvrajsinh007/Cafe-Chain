@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, Lock, Eye, EyeOff, ArrowLeft, User, Mail, KeyRound, Gift, CheckCircle, Star, Award, Crown, Sparkles } from 'lucide-react';
-import axios from "axios";
+import { Phone, Lock, Eye, EyeOff, User, Mail, KeyRound, Gift, CheckCircle, Star, Award, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import { resendEmailOtp } from '../api/api';
@@ -197,9 +196,7 @@ const SignupPage = ({ onNavigate }) => {
                 onInputChange={handleInputChange}
                 onSubmit={handleVerifyOtp}
                 onBack={() => switchView('signup')}
-                // -------------------- THE FIX IS HERE --------------------
                 onResend={handleResendOtp}
-                // ---------------------------------------------------------
               />
             )}
           </div>
@@ -246,28 +243,28 @@ const SignupPage = ({ onNavigate }) => {
             </div>
 
             {/* Features (center aligned) */}
-          <div className="space-y-6 max-w-lg w-full mx-auto flex flex-col items-center">
-            {getCurrentFeatures().map((feature, index) => (
-            <div
-              key={`${currentView}-${index}`}
-              className={`flex items-center justify-center transform transition-all duration-700 w-full max-w-md ${
-              mounted ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-              }`}
-              style={{ animationDelay: `${0.2 + index * 0.1}s` }}
-            >
-            {/* Icon */}
-            <div className="w-12 h-12 flex items-center justify-center bg-white/20 rounded-xl backdrop-blur-sm mr-4">
-              <feature.icon className="w-6 h-6" />
-            </div>
+            <div className="space-y-6 max-w-lg w-full mx-auto flex flex-col items-center">
+              {getCurrentFeatures().map((feature, index) => (
+              <div
+                key={`${currentView}-${index}`}
+                className={`flex items-center justify-center transform transition-all duration-700 w-full max-w-md ${
+                mounted ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+                }`}
+                style={{ animationDelay: `${0.2 + index * 0.1}s` }}
+              >
+              {/* Icon */}
+              <div className="w-12 h-12 flex items-center justify-center bg-white/20 rounded-xl backdrop-blur-sm mr-4">
+                <feature.icon className="w-6 h-6" />
+              </div>
 
-            {/* Text - centered block */}
-            <div className="flex-1 text-left">
-              <h3 className="font-semibold text-lg mb-1">{feature.text}</h3>
-              <p className="text-sm opacity-80 leading-relaxed">{feature.desc}</p>
+              {/* Text - centered block */}
+              <div className="flex-1 text-left">
+                <h3 className="font-semibold text-lg mb-1">{feature.text}</h3>
+                <p className="text-sm opacity-80 leading-relaxed">{feature.desc}</p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
 
           </div>
@@ -280,30 +277,10 @@ const SignupPage = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Mobile Layout (unchanged except logo in header) */}
+      {/* Mobile Layout */}
       <div className="lg:hidden min-h-screen">
-        {/* Header */}
-        {/* <div className="flex items-center justify-between p-4 bg-white shadow-sm">
-          <button
-            onClick={() => {
-              if (currentView === 'verify') switchView('signup');
-              else window.history.back();
-            }}
-            className="p-2 rounded-xl hover:bg-gray-50 transition-colors"
-          >
-            <ArrowLeft className="w-6 h-6" style={{ color: '#4a3a2f' }} />
-          </button>
-          <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center mr-2 bg-white">
-              <img src="/src/user/assets/images/cc.png" alt="CafeChain Logo" className="w-6 h-6 object-contain" />
-            </div>
-            <span className="text-lg font-bold" style={{ color: '#4a3a2f' }}>CafeChain</span>
-          </div>
-          <div className="w-10" />
-        </div> */}
-
         {/* Hero Section */}
-        <div className="relative py-12 px-6" style={{ backgroundColor: '#4a3a2f' }}>
+        <div className="relative py-8 px-6" style={{ backgroundColor: '#4a3a2f' }}>
           <div className="absolute inset-0 opacity-10">
             {[...Array(5)].map((_, i) => (
               <div
@@ -324,17 +301,17 @@ const SignupPage = ({ onNavigate }) => {
           <div className={`text-center text-white transform transition-all duration-700 ${
             mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}>
-            <h1 className="text-3xl font-bold mb-3 transition-all duration-500">
+            <h1 className="text-2xl font-bold mb-2 transition-all duration-500">
               {currentView === 'signup' ? 'Join CafeChain!' : 'Almost There!'}
             </h1>
-            <p className="text-lg opacity-90 transition-all duration-500">
+            <p className="text-sm opacity-90 transition-all duration-500">
               {currentView === 'signup' ? 'Create your account for exclusive benefits' : 'Verify your email to complete registration'}
             </p>
           </div>
         </div>
 
-        {/* Form Container */}
-        <div className="p-6 bg-white rounded-t-3xl -mt-6 relative z-10">
+        {/* Form Container - Overlapping style */}
+        <div className="p-6 bg-white rounded-t-3xl -mt-6 relative z-10 shadow-lg min-h-[calc(100vh-140px)]">
           <div className={`transform transition-all duration-800 ${
             mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`} style={{ animationDelay: '0.3s' }}>
@@ -353,17 +330,15 @@ const SignupPage = ({ onNavigate }) => {
             )}
             {currentView === 'verify' && (
               <VerifyForm 
-              formData={formData}
-              loading={loading}
-              error={error}
-              onInputChange={handleInputChange}
-              onSubmit={handleVerifyOtp}
-              onBack={() => switchView('signup')}
-              // -------------------- AND THE FIX IS ALSO HERE --------------------
-              onResend={handleResendOtp}
-              // ----------------------------------------------------------------
-              isMobile={true}
-            />
+                formData={formData}
+                loading={loading}
+                error={error}
+                onInputChange={handleInputChange}
+                onSubmit={handleVerifyOtp}
+                onBack={() => switchView('signup')}
+                onResend={handleResendOtp}
+                isMobile={true}
+              />
             )}
           </div>
         </div>
@@ -375,7 +350,7 @@ const SignupPage = ({ onNavigate }) => {
 // Signup Form Component
 const SignupForm = ({ formData, showPassword, loading, error, onInputChange, onTogglePassword, onSubmit, onNavigate, isMobile = false }) => (
   <div className="animate-fadeIn">
-    <div className="space-y-6">
+    <div className="space-y-4">
       {!isMobile && (
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2" style={{ color: '#4a3a2f' }}>Create Account</h2>
@@ -383,116 +358,116 @@ const SignupForm = ({ formData, showPassword, loading, error, onInputChange, onT
         </div>
       )}
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>Full Name</label>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>Full Name</label>
         <div className="relative group">
-          <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={onInputChange}
             placeholder="Enter your full name"
-            className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300"
+            className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-sm"
           />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>Mobile Number</label>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>Mobile Number</label>
         <div className="relative group">
-          <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+          <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type="tel"
             name="phone"
             value={formData.phone}
             onChange={onInputChange}
             placeholder="Enter your mobile number"
-            className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300"
+            className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-sm"
             maxLength="10"
           />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>Email Address</label>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>Email Address</label>
         <div className="relative group">
-          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={onInputChange}
             placeholder="Enter your email address"
-            className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300"
+            className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-sm"
           />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>Password</label>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>Password</label>
         <div className="relative group">
-          <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type={showPassword ? 'text' : 'password'}
             name="password"
             value={formData.password}
             onChange={onInputChange}
             placeholder="Create a strong password"
-            className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300"
+            className="w-full pl-10 pr-10 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-sm"
           />
           <button
             type="button"
             onClick={onTogglePassword}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>Confirm Password</label>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>Confirm Password</label>
         <div className="relative group">
-          <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type={showPassword ? 'text' : 'password'}
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={onInputChange}
             placeholder="Re-enter your password"
-            className="w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-xl"
+            className="w-full pl-10 pr-10 py-2.5 border-2 border-gray-200 rounded-lg text-sm"
           />
           <button
             type="button"
             onClick={onTogglePassword}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>
           Referral Code <span className="text-gray-400 font-normal">(Optional)</span>
         </label>
         <div className="relative group">
-          <KeyRound className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+          <KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type="text"
             name="referralCode"
             value={formData.referralCode}
             onChange={onInputChange}
             placeholder="Enter referral code"
-            className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300"
+            className="w-full pl-10 pr-4 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-sm"
           />
         </div>
-        <p className="text-xs text-gray-500 mt-1">Get extra XP with a valid referral code</p>
+        <p className="text-[10px] text-gray-500 mt-0.5">Get extra XP with a valid referral code</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 border-2 border-red-100 text-red-700 px-4 py-3 rounded-xl text-sm font-medium animate-pulse">
+        <div className="bg-red-50 border-2 border-red-100 text-red-700 px-3 py-2 rounded-lg text-xs font-medium animate-pulse">
           {error}
         </div>
       )}
@@ -500,7 +475,7 @@ const SignupForm = ({ formData, showPassword, loading, error, onInputChange, onT
       <button
         onClick={onSubmit}
         disabled={loading}
-        className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+        className="w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] text-sm"
         style={{ 
           backgroundColor: loading ? '#6b5b4d' : '#4a3a2f',
           boxShadow: loading ? 'none' : '0 4px 20px rgba(74, 58, 47, 0.3)'
@@ -508,14 +483,14 @@ const SignupForm = ({ formData, showPassword, loading, error, onInputChange, onT
       >
         {loading ? (
           <div className="flex items-center justify-center space-x-2">
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             <span>Creating Account...</span>
           </div>
         ) : 'Create Account'}
       </button>
     </div>
 
-    <div className="text-center mt-8 pt-6 border-t border-gray-100">
+    <div className="text-center mt-6 pt-4 border-t border-gray-100 text-sm">
       <span className="text-gray-600">Already have an account? </span>
       <button
         onClick={() => onNavigate && onNavigate('login')}
@@ -539,49 +514,49 @@ const VerifyForm = ({ formData, loading, error, onInputChange, onSubmit, onBack,
         </div>
       )}
 
-      <div className="text-center p-6 bg-gray-50 rounded-xl">
-        <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#4a3a2f' }}>
-          <Mail className="w-8 h-8 text-white" />
+      <div className="text-center p-4 bg-gray-50 rounded-xl">
+        <div className="w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center" style={{ backgroundColor: '#4a3a2f' }}>
+          <Mail className="w-6 h-6 text-white" />
         </div>
-        <p className="text-gray-600">
+        <p className="text-gray-600 text-sm">
           A verification code has been sent to<br />
           <span className="font-semibold" style={{ color: '#4a3a2f' }}>{formData.email}</span>
         </p>
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-sm text-green-700 font-medium">
+        <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-xs text-green-700 font-medium">
             🎉 Welcome bonus of 100 XP will be credited after verification!
           </p>
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="block text-sm font-semibold" style={{ color: '#4a3a2f' }}>Verification Code</label>
+      <div className="space-y-1">
+        <label className="block text-xs font-semibold" style={{ color: '#4a3a2f' }}>Verification Code</label>
         <div className="relative group">
-          <KeyRound className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
+          <KeyRound className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-gray-600 transition-colors" />
           <input
             type="text"
             name="otp"
             value={formData.otp}
             onChange={onInputChange}
             placeholder="Enter 6-digit code"
-            className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-center text-lg font-mono tracking-widest"
+            className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 bg-white transition-all duration-200 hover:border-gray-300 text-center text-lg font-mono tracking-widest"
             maxLength="6"
           />
         </div>
       </div>
 
       {error && (
-        <div className="bg-red-50 border-2 border-red-100 text-red-700 px-4 py-3 rounded-xl text-sm font-medium animate-pulse">
+        <div className="bg-red-50 border-2 border-red-100 text-red-700 px-3 py-2 rounded-lg text-xs font-medium animate-pulse">
           {error}
         </div>
       )}
 
       <div className="text-center">
-        <span className="text-gray-600 text-sm">Didn't receive the code? </span>
+        <span className="text-gray-600 text-xs">Didn't receive the code? </span>
         <button 
           onClick={onResend} 
           disabled={loading}
-          className="text-sm font-semibold hover:underline transition-colors" style={{ color: '#4a3a2f' }}>
+          className="text-xs font-semibold hover:underline transition-colors" style={{ color: '#4a3a2f' }}>
           Resend Code
         </button>
       </div>
@@ -589,7 +564,7 @@ const VerifyForm = ({ formData, loading, error, onInputChange, onSubmit, onBack,
       <button
         onClick={onSubmit}
         disabled={loading}
-        className="w-full py-4 rounded-xl font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98]"
+        className="w-full py-3 rounded-lg font-semibold text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transform hover:scale-[1.02] active:scale-[0.98] text-sm"
         style={{ 
           backgroundColor: loading ? '#6b5b4d' : '#4a3a2f',
           boxShadow: loading ? 'none' : '0 4px 20px rgba(74, 58, 47, 0.3)'
@@ -597,7 +572,7 @@ const VerifyForm = ({ formData, loading, error, onInputChange, onSubmit, onBack,
       >
         {loading ? (
           <div className="flex items-center justify-center space-x-2">
-            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             <span>Verifying...</span>
           </div>
         ) : 'Verify & Start Journey'}
@@ -605,12 +580,10 @@ const VerifyForm = ({ formData, loading, error, onInputChange, onSubmit, onBack,
 
       <button
         onClick={onBack}
-        className="w-full py-3 rounded-xl font-medium text-gray-600 hover:text-gray-800 border-2 border-gray-200 hover:border-gray-300 transition-all duration-200"
+        className="w-full py-2.5 rounded-lg font-medium text-gray-600 hover:text-gray-800 border-2 border-gray-200 hover:border-gray-300 transition-all duration-200 text-sm"
       >
         Back to Sign Up
       </button>
-
-      
     </div>
   </div>
 );

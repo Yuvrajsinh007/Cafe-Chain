@@ -8,18 +8,17 @@ import {
   Store, 
   MessageSquare, 
   CreditCard, 
-  X,
-  ChevronRight
+  ChevronRight,
+  Menu // Import Menu icon
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-// Import your API functions
 import { 
   adminGetPendingCafes, 
   getContactSubmissions, 
   adminGetPendingClaims 
 } from "../api/api";
 
-export default function Header() {
+export default function Header({ sidebarOpen, setSidebarOpen }) { // Accept props
   const { admin, logout } = useAdminAuth();
   const navigate = useNavigate();
   
@@ -28,7 +27,6 @@ export default function Header() {
   const [loading, setLoading] = useState(true);
   const dropdownRef = useRef(null);
 
-  // 1. Fetch Data from all sources
   const fetchNotifications = async () => {
     try {
       setLoading(true);
@@ -40,7 +38,6 @@ export default function Header() {
 
       const newNotifs = [];
 
-      // Process Pending Cafes
       cafes.forEach(cafe => {
         newNotifs.push({
           id: `cafe-${cafe._id}`,
@@ -54,7 +51,6 @@ export default function Header() {
         });
       });
 
-      // Process Messages (Showing latest 5 to avoid clutter if many)
       messages.slice(0, 5).forEach(msg => {
         newNotifs.push({
           id: `msg-${msg._id}`,
@@ -68,7 +64,6 @@ export default function Header() {
         });
       });
 
-      // Process Claims
       claims.forEach(claim => {
         newNotifs.push({
           id: `claim-${claim._id}`,
@@ -77,14 +72,12 @@ export default function Header() {
           color: 'text-green-500 bg-green-50',
           title: 'Reward Redemption',
           message: `${claim.user?.name || 'User'} claimed ₹${claim.amount}`,
-          time: new Date(claim.createdAt || Date.now()), // Fallback if createdAt missing
+          time: new Date(claim.createdAt || Date.now()),
           link: '/pithad/invoices'
         });
       });
 
-      // Sort by newest first
       newNotifs.sort((a, b) => b.time - a.time);
-
       setNotifications(newNotifs);
     } catch (error) {
       console.error("Failed to fetch notifications", error);
@@ -93,14 +86,12 @@ export default function Header() {
     }
   };
 
-  // Initial Fetch & Poll every 60 seconds
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -117,15 +108,27 @@ export default function Header() {
   };
 
   return (
-    <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8 shadow-sm sticky top-0 z-30">
-      {/* Left Side: Welcome Text */}
-      <div className="flex flex-col">
-         <h2 className="text-xl font-bold text-gray-800">Welcome back, Admin</h2>
-         <p className="text-sm text-gray-500">Here is what’s happening today.</p>
+    <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-4 md:px-8 shadow-sm sticky top-0 z-20">
+      
+      {/* Left Side: Hamburger & Welcome Text */}
+      <div className="flex items-center gap-4">
+        {/* Mobile Hamburger Button */}
+        <button
+          className="p-1 -ml-1 rounded-md lg:hidden text-gray-600 focus:outline-none focus:shadow-outline-purple"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Menu"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+
+        <div className="flex flex-col">
+           <h2 className="text-lg md:text-xl font-bold text-gray-800">Welcome back</h2>
+           <p className="text-xs md:text-sm text-gray-500 hidden md:block">Here is what’s happening today.</p>
+        </div>
       </div>
 
       {/* Right Side: Actions */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-3 md:gap-6">
         
         {/* === Notification Bell === */}
         <div className="relative" ref={dropdownRef}>
@@ -205,7 +208,7 @@ export default function Header() {
         <div className="h-8 w-px bg-gray-200"></div>
 
         {/* User Profile Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="text-right hidden md:block">
              <div className="font-bold text-gray-700 text-sm">{admin?.name || "Administrator"}</div>
              <div className="text-xs text-amber-600 font-medium">Super Admin</div>
@@ -217,7 +220,7 @@ export default function Header() {
 
           <button
             onClick={logout}
-            className="ml-2 p-2 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
+            className="ml-1 p-2 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all"
             title="Logout"
           >
             <LogOut className="w-5 h-5" />

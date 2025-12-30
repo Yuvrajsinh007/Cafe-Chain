@@ -5,8 +5,9 @@ import { MapPin, Calendar, CheckCircle2, Clock, XCircle } from "lucide-react";
 export default function CafeTable({ cafes, onRowClick, approvalMode = false }) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto w-full">
+        {/* Added whitespace-nowrap to prevent squishing on mobile */}
+        <table className="w-full whitespace-nowrap">
           <thead className="bg-gray-50/50 border-b border-gray-100">
             <tr>
               <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Cafe Details</th>
@@ -26,7 +27,7 @@ export default function CafeTable({ cafes, onRowClick, approvalMode = false }) {
               >
                 <td className="px-6 py-4">
                    <div className="flex items-center gap-3">
-                       <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-lg">
+                       <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-lg shrink-0">
                            {cafe.name.charAt(0)}
                        </div>
                        <div>
@@ -43,10 +44,10 @@ export default function CafeTable({ cafes, onRowClick, approvalMode = false }) {
                 </td>
                 <td className="px-6 py-4">
                   {approvalMode ? (
-                     <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <Calendar className="w-4 h-4 text-gray-400" />
-                        {cafe.createdAt ? format(new Date(cafe.createdAt), 'MMM dd, yyyy') : 'N/A'}
-                     </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                         <Calendar className="w-4 h-4 text-gray-400" />
+                         {cafe.createdAt ? format(new Date(cafe.createdAt), 'MMM dd, yyyy') : 'N/A'}
+                      </div>
                   ) : (
                     <StatusBadge status={cafe.status} />
                   )}

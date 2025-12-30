@@ -7,7 +7,8 @@ const NotFoundPage = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="bg-warm-gray flex justify-center px-6 font-['Inter'] pt-20 md:pt-0">
+    // Changed pt-20 to py-20 to balance the spacing and center content vertically
+    <div className="bg-warm-gray min-h-screen flex justify-center items-center px-6 font-['Inter'] py-20 md:py-0">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         .bg-warm-gray { background-color: #F8F6F1; }
@@ -21,7 +22,7 @@ const NotFoundPage = () => {
       `}</style>
 
       {/* ---------- Desktop View ---------- */}
-      <div className="hidden md:flex w-full max-w-xl bg-white rounded-2xl shadow-soft p-8 text-center self-center mt-24">
+      <div className="hidden md:flex w-full max-w-xl bg-white rounded-2xl shadow-soft p-8 text-center">
         <div className="w-full">
           <div className="flex items-center justify-center mb-4">
             <div className="w-16 h-16 rounded-2xl bg-accent flex items-center justify-center text-white">
@@ -53,30 +54,31 @@ const NotFoundPage = () => {
       </div>
 
       {/* ---------- Mobile View ---------- */}
-      <div className="flex md:hidden w-full bg-white rounded-2xl shadow-soft p-6 text-center self-center mt-32">
+      {/* Removed mt-32 to fix the 'below center' issue */}
+      <div className="flex md:hidden w-full max-w-sm bg-white rounded-xl shadow-soft p-5 text-center">
         <div className="w-full">
           <div className="flex items-center justify-center mb-3">
-            <div className="w-14 h-14 rounded-xl bg-accent flex items-center justify-center text-white">
-              <Coffee className="w-7 h-7" />
+            <div className="w-12 h-12 rounded-xl bg-accent flex items-center justify-center text-white">
+              <Coffee className="w-6 h-6" />
             </div>
           </div>
 
-          <h1 className="text-5xl font-extrabold text-dark-brown">404</h1>
-          <p className="mt-2 text-base text-gray-600">Page not found</p>
-          <p className="mt-1 text-xs text-gray-500 px-2">
+          <h1 className="text-4xl font-extrabold text-dark-brown">404</h1>
+          <p className="mt-1 text-sm text-gray-600 font-medium">Page not found</p>
+          <p className="mt-2 text-xs text-gray-500 px-2 leading-relaxed">
             The page you are looking for might have been removed or is temporarily unavailable.
           </p>
 
-          <div className="mt-6 flex flex-col gap-3">
+          <div className="mt-5 flex flex-col gap-2.5">
             <Link
               to={isAuthenticated ? '/user/home' : '/user/login'}
-              className="px-5 py-3 rounded-lg bg-accent text-white font-semibold hover:opacity-90 transition-colors"
+              className="px-4 py-2.5 rounded-lg bg-accent text-white text-sm font-semibold hover:opacity-90 transition-colors"
             >
               {isAuthenticated ? 'Go to Home' : 'Go to Login'}
             </Link>
             <Link
               to="/user"
-              className="px-5 py-3 rounded-lg bg-light-gray text-dark-brown font-semibold hover:bg-gray-200 transition-colors"
+              className="px-4 py-2.5 rounded-lg bg-light-gray text-dark-brown text-sm font-semibold hover:bg-gray-200 transition-colors"
             >
               Back to Welcome
             </Link>

@@ -7,7 +7,7 @@ import Loader from "../components/Loader";
 import CafeCard from "../components/CafeCard";
 import UpcomingEvents from "../components/UpcomingEvents";
 import GlobalAnnouncementBanner from "../components/GlobalAnnouncementBanner";
-import { Search, Heart, Users, Gift, Coffee } from "lucide-react"; // Removed unused Megaphone
+import { Search, Heart, Users, Gift, Coffee } from "lucide-react";
 
 // ============================================================
 // Animated Background Balls Component
@@ -115,7 +115,7 @@ const AnimatedHeaderSubtitle = ({ lines }) => {
   };
 
   return (
-    <div className="text-2xl md:text-3xl font-medium text-amber-200 mb-12 min-h-[3rem]">
+    <div className="text-lg md:text-3xl font-medium text-amber-200 mb-8 min-h-[2rem] md:min-h-[3rem]">
       <AnimatePresence mode="wait">
         <motion.p
           key={lineIndex}
@@ -149,8 +149,6 @@ const HomePage = () => {
   const [cafes, setCafes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Note: Hardcoded announcements logic removed in favor of GlobalAnnouncementBanner component
-
   useEffect(() => {
     const fetchData = async () => {
       if (authLoading || !user) {
@@ -159,13 +157,11 @@ const HomePage = () => {
       }
 
       try {
-        // Fetch Profile for points
         const profileRes = await getProfile(user.phone);
         if (profileRes?.xp !== undefined) {
           setPoints(profileRes.xp);
         }
 
-        // Fetch Invoice history for Recent Activity
         const invoiceRes = await getInvoiceHistory();
         if (Array.isArray(invoiceRes)) {
           const formatted = invoiceRes
@@ -179,7 +175,6 @@ const HomePage = () => {
           setActivities(formatted);
         }
 
-        // Fetch 3 random cafes
         const cafeRes = await getCafes();
         if (Array.isArray(cafeRes)) {
           const random = cafeRes.sort(() => 0.5 - Math.random()).slice(0, 3);
@@ -197,22 +192,22 @@ const HomePage = () => {
 
   const quickActions = [
     {
-      icon: <Search className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
+      icon: <Search className="w-6 h-6 md:w-10 md:h-10 mx-auto mb-2 md:mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
       title: "Find Cafes",
       link: "/user/cafes",
     },
     {
-      icon: <Heart className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
+      icon: <Heart className="w-6 h-6 md:w-10 md:h-10 mx-auto mb-2 md:mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
       title: "Wishlist",
       link: "/user/cafes",
     },
     {
-      icon: <Users className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
-      title: "Invite Friends",
+      icon: <Users className="w-6 h-6 md:w-10 md:h-10 mx-auto mb-2 md:mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
+      title: "Invite",
       link: "/user/rewards#referral-section",
     },
     {
-      icon: <Gift className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
+      icon: <Gift className="w-6 h-6 md:w-10 md:h-10 mx-auto mb-2 md:mb-4 text-[#4A3A2F]" strokeWidth={1.5} />,
       title: "Redeem",
       link: "/user/claim-reward",
     },
@@ -222,17 +217,17 @@ const HomePage = () => {
     {
       title: "Join & Check-In",
       desc: "Sign up and check in at partner cafes to start collecting CashPoints.",
-      icon: <Search className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />
+      icon: <Search className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />
     },
     {
       title: "Refer & Earn",
       desc: "Share your referral code. You and your friends earn bonus points.",
-      icon: <Users className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />
+      icon: <Users className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />
     },
     {
       title: "Redeem Rewards",
       desc: "Use your CashPoints to pay for coffee, food, and more.",
-      icon: <Gift className="w-10 h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />
+      icon: <Gift className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-4 text-[#4A3A2F]" strokeWidth={1.5} />
     },
   ];
 
@@ -258,51 +253,53 @@ const HomePage = () => {
   if (loading) return <Loader />;
 
   return (
-    <div className="min-h-screen bg-white text-[#4A3A2F] pt-20 md:pt-0">
-      {/* === Hero Section === */}
-      <section className="relative py-24 bg-gradient-to-br from-[#4A3A2F] via-[#3B2D25] to-[#2A1F18] overflow-hidden">
+    <div className="min-h-screen bg-white text-[#4A3A2F] pt-16 md:pt-0">
+      
+      {/* === Hero Section (Compact for Mobile) === */}
+      <section className="relative py-12 md:py-24 bg-gradient-to-br from-[#4A3A2F] via-[#3B2D25] to-[#2A1F18] overflow-hidden">
         <AnimatedBalls />
         <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6">Welcome to CafeChain</h1>
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-extrabold text-white mb-4 md:mb-6">Welcome to CafeChain</h1>
           <AnimatedHeaderSubtitle lines={animatedMessages} />
 
-          <div className="inline-block max-w-md mx-auto mb-10">
-            <div className="bg-white rounded-3xl shadow-2xl p-6 text-[#4a3a2f]">
+          <div className="inline-block max-w-md mx-auto mb-8 md:mb-10">
+            <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-6 text-[#4a3a2f]">
               <div className="flex items-center">
-                <div className="w-24 h-24 bg-white flex items-center justify-center rounded-2xl mr-6">
-                  <Coffee className="w-12 h-12 text-[#4a3a2f]" strokeWidth={2} />
+                <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-50 flex items-center justify-center rounded-2xl mr-4 md:mr-6">
+                  <Coffee className="w-8 h-8 md:w-12 md:h-12 text-[#4a3a2f]" strokeWidth={2} />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm text-gray-500">Your XP</p>
-                  <h2 className="text-5xl font-extrabold">{points.toLocaleString()}</h2>
+                  <p className="text-xs md:text-sm text-gray-500">Your XP</p>
+                  <h2 className="text-3xl md:text-5xl font-extrabold">{points.toLocaleString()}</h2>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
-            <Link to="/user/cafes" className="flex items-center justify-center gap-3 bg-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 shadow-lg transition-colors">
-              <Search className="w-6 h-6 text-black" strokeWidth={2} />
+          <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+            <Link to="/user/cafes" className="flex flex-col md:flex-row items-center justify-center gap-2 bg-white px-4 py-3 md:px-8 md:py-4 rounded-xl font-semibold text-sm md:text-lg hover:bg-gray-50 shadow-lg transition-colors">
+              <Search className="w-5 h-5 md:w-6 md:h-6 text-black" strokeWidth={2} />
               <span>Find Cafes</span>
             </Link>
-            <Link to="/user/claim-reward" className="flex items-center justify-center gap-3 bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-amber-700 shadow-lg transition-colors">
-              <Gift className="w-10 h-10 text-white" strokeWidth={2} />
-              <span>Redeem Rewards</span>
+            <Link to="/user/claim-reward" className="flex flex-col md:flex-row items-center justify-center gap-2 bg-amber-600 text-white px-4 py-3 md:px-8 md:py-4 rounded-xl font-semibold text-sm md:text-lg hover:bg-amber-700 shadow-lg transition-colors">
+              <Gift className="w-5 h-5 md:w-10 md:h-10 text-white" strokeWidth={2} />
+              <span>Redeem</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* === Quick Actions === */}
-      <motion.section className="py-16" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      {/* === Quick Actions (Compact Grid) === */}
+      <motion.section className="py-8 md:py-16" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">What would you like to do today?</h2>
-          <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-6" variants={cardContainerVariants}>
+          <h2 className="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12">What would you like to do?</h2>
+          {/* Reduced gap and padding for mobile */}
+          <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6" variants={cardContainerVariants}>
             {quickActions.map((action, idx) => (
               <motion.div key={idx} variants={cardVariants}>
-                <Link to={action.link} className="block bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 h-full">
+                <Link to={action.link} className="block bg-gray-50 border border-gray-200 rounded-xl md:rounded-2xl p-4 md:p-8 text-center shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 h-full">
                   {action.icon}
-                  <h3 className="font-bold text-lg">{action.title}</h3>
+                  <h3 className="font-bold text-sm md:text-lg">{action.title}</h3>
                 </Link>
               </motion.div>
             ))}
@@ -317,13 +314,13 @@ const HomePage = () => {
       <UpcomingEvents />
 
       {/* === Featured Cafes === */}
-      <motion.section className="py-20 bg-white" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      <motion.section className="py-10 md:py-20 bg-white" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-6">Featured Partner Cafes</h2>
-            <p className="text-xl text-gray-600">Discover amazing coffee experiences in Surat</p>
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-4xl font-bold mb-3 md:mb-6">Featured Cafes</h2>
+            <p className="text-sm md:text-xl text-gray-600">Discover amazing coffee experiences</p>
           </div>
-          <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-8" variants={cardContainerVariants}>
+          <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8" variants={cardContainerVariants}>
             {cafes.length > 0 ? (
               cafes.map((cafe) => (
                 <motion.div key={cafe._id} variants={cardVariants}>
@@ -334,30 +331,30 @@ const HomePage = () => {
               <p className="text-gray-500 text-center col-span-3">No cafes available at the moment.</p>
             )}
           </motion.div>
-          <div className="text-center mt-12">
-            <Link to="/user/cafes" className="px-8 py-4 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 shadow-lg text-lg">See All Cafes</Link>
+          <div className="text-center mt-8 md:mt-12">
+            <Link to="/user/cafes" className="px-6 py-3 md:px-8 md:py-4 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 shadow-lg text-sm md:text-lg">See All Cafes</Link>
           </div>
         </div>
       </motion.section>
 
       {/* === How It Works === */}
       <motion.section
-        className="py-20 bg-gray-50"
+        className="py-10 md:py-20 bg-gray-50"
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">How CashPoints Works</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-2xl md:text-5xl font-bold mb-4 md:mb-6">How CashPoints Works</h2>
+            <p className="text-sm md:text-xl text-gray-600 max-w-3xl mx-auto">
               Start earning rewards in three simple steps
             </p>
           </div>
 
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-12"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12"
             variants={cardContainerVariants}
           >
             {workflowSteps.map((step, idx) => (
@@ -366,18 +363,15 @@ const HomePage = () => {
                 className="text-center"
                 variants={cardVariants}
               >
-                {/* ✅ Circular border with step number */}
-                <div className="relative w-24 h-24 mx-auto mb-6 rounded-full border-4 border-[#4A3A2F] flex items-center justify-center">
-                  {/* Step number badge */}
-                  <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-[#4A3A2F] text-white flex items-center justify-center text-sm font-bold">
+                <div className="relative w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 md:mb-6 rounded-full border-4 border-[#4A3A2F] flex items-center justify-center">
+                  <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-6 h-6 md:w-8 md:h-8 rounded-full bg-[#4A3A2F] text-white flex items-center justify-center text-xs md:text-sm font-bold">
                     {idx + 1}
                   </div>
-
-                  {React.cloneElement(step.icon, { strokeWidth: 2.5, className: "w-12 h-12 text-[#4A3A2F]" })}
+                  {React.cloneElement(step.icon, { className: "w-8 h-8 md:w-12 md:h-12 text-[#4A3A2F]" })}
                 </div>
 
-                <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
-                <p className="text-gray-600">{step.desc}</p>
+                <h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4">{step.title}</h3>
+                <p className="text-sm md:text-base text-gray-600">{step.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -386,26 +380,26 @@ const HomePage = () => {
 
       {/* === Recent Activity === */}
       <motion.section
-        className="py-16 bg-gray-50"
+        className="py-10 md:py-16 bg-gray-50"
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-            <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
-              <h2 className="text-3xl font-bold">Recent Activity</h2>
+          <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl p-4 md:p-8 border border-gray-100">
+            <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
+              <h2 className="text-2xl md:text-3xl font-bold">Recent Activity</h2>
               <Link
                 to="/user/rewards#recent-activity"
-                className="px-6 py-3 bg-[#4A3A2F] text-white rounded-full font-semibold shadow-lg hover:bg-opacity-90 transition-colors"
+                className="px-4 py-2 md:px-6 md:py-3 bg-[#4A3A2F] text-white rounded-full font-semibold text-sm md:text-base shadow-lg hover:bg-opacity-90 transition-colors"
               >
-                View All Activity
+                View All
               </Link>
             </div>
 
             {activities.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                 {activities.map((activity, index) => (
                   <motion.div
                     key={activity._id || index}
@@ -413,19 +407,19 @@ const HomePage = () => {
                     initial="hidden"
                     animate="visible"
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="p-5 border rounded-xl bg-white shadow-sm"
+                    className="p-4 border rounded-xl bg-white shadow-sm"
                   >
                     <div className="flex items-start justify-between">
                       <div className="min-w-0">
-                        <div className="font-bold text-lg text-[#4a3a2f] truncate">
+                        <div className="font-bold text-base md:text-lg text-[#4a3a2f] truncate">
                           {activity?.cafe?.name || "A Cafe"}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-xs text-gray-500">
                           {activity?.time}
                         </div>
                       </div>
                       <div
-                        className={`px-3 py-1 text-xs font-semibold rounded-full capitalize ${activity?.status === "approved"
+                        className={`px-2 py-1 text-[10px] md:text-xs font-semibold rounded-full capitalize ${activity?.status === "approved"
                             ? "bg-green-100 text-green-700"
                             : activity?.status === "rejected"
                               ? "bg-red-100 text-red-700"
@@ -435,10 +429,10 @@ const HomePage = () => {
                         {activity?.status || "Pending"}
                       </div>
                     </div>
-                    <div className="mt-4 flex items-center justify-between">
+                    <div className="mt-3 flex items-center justify-between">
                       <div className="text-sm text-gray-600">
                         Amount:{" "}
-                        <span className="font-semibold text-lg text-[#4a3a2f]">
+                        <span className="font-semibold text-base text-[#4a3a2f]">
                           {activity?.points}
                         </span>
                       </div>
@@ -447,7 +441,7 @@ const HomePage = () => {
                           href={activity.invoiceUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm font-semibold text-amber-600 hover:underline"
+                          className="text-xs font-semibold text-amber-600 hover:underline"
                         >
                           View Invoice
                         </a>
@@ -457,25 +451,32 @@ const HomePage = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-center py-8">No recent activity found. Check in at a cafe to get started!</p>
+              <p className="text-gray-500 text-center py-8 text-sm">No recent activity found.</p>
             )}
           </div>
         </div>
       </motion.section>
 
       {/* === Final Call to Action === */}
-      <motion.section className="py-20 bg-[#4A3A2F]" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+      <motion.section 
+        // INCREASED BOTTOM PADDING TO PREVENT CUTOFF ON MOBILE
+        className="pt-12 pb-28 md:py-20 bg-[#4A3A2F]" 
+        variants={sectionVariants} 
+        initial="hidden" 
+        whileInView="visible" 
+        viewport={{ once: true }}
+      >
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-5xl font-bold text-white mb-6">Ready to Start Earning?</h2>
-          <p className="text-xl text-amber-200 mb-12">Join CafeChain today and transform every coffee purchase into valuable rewards.</p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link to="/user/cafes" className="bg-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-gray-100 shadow-xl text-[#4A3A2F] transition-transform hover:scale-105 flex items-center justify-center gap-3">
-              <Search className="w-6 h-6 text-black" strokeWidth={2} />
-              <span>Explore Cafes</span>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 md:mb-6">Ready to Start Earning?</h2>
+          <p className="text-base md:text-xl text-amber-200 mb-8 md:mb-12">Join CafeChain today and transform every coffee purchase into valuable rewards.</p>
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center">
+            <Link to="/user/cafes" className="bg-white px-8 py-3 md:px-12 md:py-5 rounded-xl md:rounded-2xl font-bold text-lg md:text-xl hover:bg-gray-100 shadow-xl text-[#4A3A2F] transition-transform hover:scale-105 flex items-center justify-center gap-3">
+              <Search className="w-5 h-5 md:w-6 md:h-6 text-black" strokeWidth={2} />
+              <span>Explore</span>
             </Link>
-            <Link to="/user/rewards" className="bg-amber-600 text-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-amber-700 shadow-xl transition-transform hover:scale-105 flex items-center justify-center gap-3">
-              <Gift className="w-6 h-6 text-white" strokeWidth={2} />
-              <span>Redeem Points</span>
+            <Link to="/user/rewards" className="bg-amber-600 text-white px-8 py-3 md:px-12 md:py-5 rounded-xl md:rounded-2xl font-bold text-lg md:text-xl hover:bg-amber-700 shadow-xl transition-transform hover:scale-105 flex items-center justify-center gap-3">
+              <Gift className="w-5 h-5 md:w-6 md:h-6 text-white" strokeWidth={2} />
+              <span>Redeem</span>
             </Link>
           </div>
         </div>

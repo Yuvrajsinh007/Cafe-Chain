@@ -36,11 +36,11 @@ const AnimatedSubtitle = ({ lines }) => {
   };
 
   return (
-    <div className="h-14 md:h-8 flex items-center justify-center">
+    <div className="h-10 md:h-8 flex items-center justify-center">
       <AnimatePresence mode="wait">
         <motion.p
           key={lineIndex}
-          className="text-base md:text-lg text-gray-500 max-w-3xl mx-auto"
+          className="text-xs md:text-lg text-gray-500 max-w-3xl mx-auto px-4"
           variants={lineVariants}
           initial="initial"
           animate="animate"
@@ -164,25 +164,28 @@ const CafesPage = () => {
   const totalPages = isMobile ? Math.ceil(filteredCafes.length / cafesPerPage) : 1;
 
   return (
-    <div className="w-full min-h-screen bg-white flex flex-col items-center pb-24 text-[#4a3a2f] pt-20 md:pt-0">
-      <div className="w-full max-w-7xl px-4 py-6">
+    // Reduced padding top from pt-20 to pt-16 for mobile
+    <div className="w-full min-h-screen bg-white flex flex-col items-center pb-24 text-[#4a3a2f] pt-16 md:pt-0">
+      <div className="w-full max-w-7xl px-4 py-4 md:py-6">
+        {/* Compact Header Section */}
         <motion.div
-          className="text-center my-8 md:my-12"
+          className="text-center my-6 md:my-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-5xl font-bold mb-2">
-            Find Your Perfect Coffee Moment
+          <h1 className="text-2xl md:text-5xl font-bold mb-2">
+            Find Your Perfect Coffee
           </h1>
           <AnimatedSubtitle lines={subtitleLines} />
         </motion.div>
 
-        <div className="flex justify-center w-full mb-8 md:mb-12">
-          <div className="relative flex bg-gray-100 rounded-full p-1 w-full max-w-xs">
+        {/* Compact Tabs */}
+        <div className="flex justify-center w-full mb-6 md:mb-12">
+          <div className="relative flex bg-gray-100 rounded-full p-1 w-full max-w-[250px] md:max-w-xs">
             <button
               onClick={() => handleTabChange("all")}
-              className={`relative flex-1 py-3 px-4 rounded-full text-sm md:text-base font-medium z-10 transition-colors ${
+              className={`relative flex-1 py-2 md:py-3 px-3 md:px-4 rounded-full text-xs md:text-base font-medium z-10 transition-colors ${
                 activeTab === "all" ? "text-[#4a3a2f]" : "text-gray-500"
               }`}
             >
@@ -190,7 +193,7 @@ const CafesPage = () => {
             </button>
             <button
               onClick={() => handleTabChange("favourite")}
-              className={`relative flex-1 py-3 px-4 rounded-full text-sm md:text-base font-medium z-10 transition-colors ${
+              className={`relative flex-1 py-2 md:py-3 px-3 md:px-4 rounded-full text-xs md:text-base font-medium z-10 transition-colors ${
                 activeTab === "favourite" ? "text-[#4a3a2f]" : "text-gray-500"
               }`}
             >
@@ -212,7 +215,8 @@ const CafesPage = () => {
           {pagedCafes.length > 0 ? (
             <motion.div
               key={activeTab + searchParams.get("search") + currentPage}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
+              // Reduced gap on mobile from gap-6 to gap-4
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -232,19 +236,19 @@ const CafesPage = () => {
           ) : (
             <motion.div
               key="no-cafes"
-              className="text-center py-16"
+              className="text-center py-10 md:py-16"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="w-20 h-20 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <Coffee className="w-10 h-10 text-gray-400" />
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-100 rounded-full mx-auto mb-4 md:mb-6 flex items-center justify-center">
+                <Coffee className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
               </div>
-              <h3 className="text-2xl font-semibold text-[#4a3a2f] mb-2">
+              <h3 className="text-xl md:text-2xl font-semibold text-[#4a3a2f] mb-2">
                 No Cafes Found
               </h3>
-              <p className="text-gray-500">
+              <p className="text-sm md:text-base text-gray-500">
                 {activeTab === "favourite"
                   ? "You haven't added any favourites yet!"
                   : "Check back later for new and exciting cafes."}
@@ -253,13 +257,13 @@ const CafesPage = () => {
           )}
         </AnimatePresence>
 
-        {/* Pagination for mobile */}
+        {/* Compact Pagination for mobile */}
         {isMobile && totalPages > 1 && (
           <div className="flex justify-center gap-2 mt-6">
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
-                className={`w-8 h-8 rounded-full text-sm font-medium ${
+                className={`w-8 h-8 rounded-full text-xs font-medium flex items-center justify-center transition-colors ${
                   currentPage === i + 1 ? "bg-[#4a3a2f] text-white" : "bg-gray-200 text-gray-600"
                 }`}
                 onClick={() => setCurrentPage(i + 1)}

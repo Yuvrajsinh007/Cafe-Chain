@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useLocation } from "react-router-dom"; // ✅ Import useLocation
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Home,
   FileCheck,
@@ -10,7 +10,8 @@ import {
   Gift,
   FileText,
   MessageCircle,
-  Coffee
+  Coffee,
+  X // Added X icon for closing on mobile
 } from 'lucide-react';
 
 const navItems = [
@@ -25,44 +26,63 @@ const navItems = [
     { to: "/pithad/invoices", label: "Invoices", Icon: FileText },
 ];
 
-export default function Sidebar() {
-  const location = useLocation(); // ✅ Get current path
+export default function Sidebar({ sidebarOpen, setSidebarOpen }) {
+  const location = useLocation();
 
   return (
-    <aside className="w-64 bg-[#2A1F18] text-white flex flex-col h-screen sticky top-0 shadow-2xl">
-      <div className="h-20 flex items-center gap-3 px-6 border-b border-white/10">
-        <div className="w-10 h-10 bg-amber-600 rounded-lg flex items-center justify-center shadow-lg shadow-amber-900/50">
-           <Coffee className="text-white w-6 h-6" />
-        </div>
-        <div>
-           <h1 className="font-bold text-lg tracking-wide">CafeChain</h1>
-           <span className="text-xs text-amber-500 font-medium tracking-wider uppercase">Admin Panel</span>
-        </div>
-      </div>
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {sidebarOpen && (
+        <div 
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 z-20 bg-black bg-opacity-50 lg:hidden transition-opacity"
+        />
+      )}
 
-      <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) => {
-              // ✅ CUSTOM LOGIC: 
-              // If we are on the "Approvals" page, explicitly force the "Cafes" link to be inactive
-              // regardless of what React Router says.
-              const isCafesLink = item.to === "/pithad/cafes";
-              const isOnApprovalPage = location.pathname.includes("/approval-queue");
-              
-              const finalActive = isCafesLink && isOnApprovalPage ? false : isActive;
-
-              return `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
-                finalActive
-                  ? "bg-amber-600 text-white shadow-lg shadow-amber-900/20 translate-x-1"
-                  : "text-gray-400 hover:bg-white/5 hover:text-white"
-              }`;
-            }}
+      {/* Sidebar Container */}
+      <aside 
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-[#2A1F18] text-white flex flex-col h-screen shadow-2xl transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="h-20 flex items-center justify-between px-6 border-b border-white/10 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-amber-600 rounded-lg flex items-center justify-center shadow-lg shadow-amber-900/50">
+               <Coffee className="text-white w-6 h-6" />
+            </div>
+            <div>
+               <h1 className="font-bold text-lg tracking-wide">CafeChain</h1>
+               <span className="text-xs text-amber-500 font-medium tracking-wider uppercase">Admin Panel</span>
+            </div>
+          </div>
+          {/* Close button for mobile */}
+          <button 
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden text-gray-400 hover:text-white"
           >
-            {({ isActive }) => {
-                // ✅ Apply the same logic to the Icon styling inside
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={() => setSidebarOpen(false)} // Close sidebar on mobile when link clicked
+              className={({ isActive }) => {
+                const isCafesLink = item.to === "/pithad/cafes";
+                const isOnApprovalPage = location.pathname.includes("/approval-queue");
+                const finalActive = isCafesLink && isOnApprovalPage ? false : isActive;
+
+                return `flex items-center px-4 py-3 rounded-xl transition-all duration-200 group ${
+                  finalActive
+                    ? "bg-amber-600 text-white shadow-lg shadow-amber-900/20 translate-x-1"
+                    : "text-gray-400 hover:bg-white/5 hover:text-white"
+                }`;
+              }}
+            >
+              {({ isActive }) => {
                 const isCafesLink = item.to === "/pithad/cafes";
                 const isOnApprovalPage = location.pathname.includes("/approval-queue");
                 const finalActive = isCafesLink && isOnApprovalPage ? false : isActive;
@@ -75,16 +95,17 @@ export default function Sidebar() {
                         <span className="font-medium">{item.label}</span>
                     </>
                 );
-            }}
-          </NavLink>
-        ))}
-      </nav>
-      
-      <div className="p-4 border-t border-white/10">
-        <div className="text-xs text-center text-gray-500">
-            &copy; {new Date().getFullYear()} CafeChain System
+              }}
+            </NavLink>
+          ))}
+        </nav>
+        
+        <div className="p-4 border-t border-white/10 shrink-0">
+          <div className="text-xs text-center text-gray-500">
+             &copy; {new Date().getFullYear()} CafeChain System
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }

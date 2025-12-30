@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getRewardCafes, claimReward } from "../api/api";
-import { toast } from "sonner"; // <-- added toast
+import { toast } from "sonner";
 
 const ClaimRewardPage = () => {
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ const ClaimRewardPage = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const allowedTypes = ["image/jpeg", "image/png", "application/pithadf"];
+    const allowedTypes = ["image/jpeg", "image/png", "application/pdf"];
     const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.pdf)$/i;
 
     if (allowedTypes.includes(file.type) && allowedExtensions.test(file.name)) {
@@ -127,49 +127,51 @@ const ClaimRewardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#4A3A2F] font-sans pb-24 pt-20 md:pt-0">
-      {/* Toast container */}
-
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    // Adjusted padding: pt-16 for mobile (clears nav), reduced pb
+    <div className="min-h-screen bg-white text-[#4A3A2F] font-sans pb-24 pt-16 md:pt-0">
+      
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-between mb-8"
+          className="flex items-center justify-between mb-6 md:mb-8"
         >
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors focus:outline-none focus:ring-0"
+            className="flex items-center gap-1 md:gap-2 text-gray-500 hover:text-[#4A3A2F] transition-colors focus:outline-none focus:ring-0 text-sm md:text-base"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5" />
             <span className="font-semibold">Back</span>
           </button>
 
-
           <button
             onClick={() => navigate("/user/invoice-history")}
-            className="flex items-center gap-2 text-[#4A3A2F] px-3 py-2 rounded-xl border border-stone-300 hover:bg-stone-100 transition"
+            className="flex items-center gap-1 md:gap-2 text-[#4A3A2F] px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg md:rounded-xl border border-stone-300 hover:bg-stone-100 transition text-xs md:text-sm"
             title="View your uploaded invoices"
           >
-            <History className="w-5 h-5" />
+            <History className="w-4 h-4 md:w-5 md:h-5" />
             <span className="font-semibold hidden sm:inline">View History</span>
+            <span className="font-semibold sm:hidden">History</span>
           </button>
         </motion.header>
 
         <main>
-          <div className="text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+          <div className="text-center mb-6 md:mb-10">
+            {/* Scaled down title for mobile */}
+            <h1 className="text-2xl md:text-4xl font-bold mb-2">
               Claim Your Points
             </h1>
-            <p className="text-base md:text-lg text-gray-500">
+            <p className="text-sm md:text-lg text-gray-500">
               Upload your cafe invoice to earn points for your visit.
             </p>
           </div>
 
-          <div className="bg-stone-50 rounded-2xl p-4 md:p-8 shadow-sm border border-stone-200">
+          {/* Reduced padding inside the card for mobile */}
+          <div className="bg-stone-50 rounded-xl md:rounded-2xl p-4 md:p-8 shadow-sm border border-stone-200">
             <form onSubmit={handleSubmit}>
               <motion.div
-                className="space-y-6"
+                className="space-y-4 md:space-y-6"
                 variants={formContainerVariants}
                 initial="hidden"
                 animate="visible"
@@ -177,18 +179,18 @@ const ClaimRewardPage = () => {
                 <motion.div variants={formItemVariants}>
                   <label
                     htmlFor="cafe"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2"
                   >
                     Select Cafe
                   </label>
                   <div className="relative">
-                    <Coffee className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Coffee className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                     <select
                       id="cafe"
                       value={cafeId}
                       onChange={(e) => setCafeId(e.target.value)}
                       required
-                      className="w-full pl-12 pr-4 py-3 border border-stone-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#4A3A2F] transition"
+                      className="w-full pl-10 md:pl-12 pr-4 py-2.5 md:py-3 text-sm md:text-base border border-stone-300 rounded-lg md:rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#4A3A2F] transition appearance-none"
                     >
                       <option value="">Select a cafe</option>
                       {cafes.map((cafe) => (
@@ -203,12 +205,12 @@ const ClaimRewardPage = () => {
                 <motion.div variants={formItemVariants}>
                   <label
                     htmlFor="amount"
-                    className="block text-sm font-semibold text-gray-700 mb-2"
+                    className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2"
                   >
                     Invoice Amount
                   </label>
                   <div className="relative">
-                    <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Hash className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-gray-400" />
                     <input
                       type="text"
                       inputMode="numeric"
@@ -217,39 +219,40 @@ const ClaimRewardPage = () => {
                       onChange={handleAmountChange}
                       placeholder="Enter total amount"
                       required
-                      className="w-full pl-12 pr-4 py-3 border border-stone-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#4A3A2F] transition"
+                      className="w-full pl-10 md:pl-12 pr-4 py-2.5 md:py-3 text-sm md:text-base border border-stone-300 rounded-lg md:rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-[#4A3A2F] transition"
                     />
                   </div>
                 </motion.div>
 
                 <motion.div variants={formItemVariants}>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1 md:mb-2">
                     Upload Invoice
                   </label>
                   <label
                     htmlFor="invoice-upload"
-                    className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-2xl bg-white cursor-pointer transition-colors hover:border-[#4A3A2F] hover:bg-stone-100 ${fileError ? "border-red-500" : "border-stone-300"
+                    // Reduced height on mobile (h-36 vs h-48)
+                    className={`flex flex-col items-center justify-center w-full h-36 md:h-48 border-2 border-dashed rounded-xl md:rounded-2xl bg-white cursor-pointer transition-colors hover:border-[#4A3A2F] hover:bg-stone-100 ${fileError ? "border-red-500" : "border-stone-300"
                       }`}
                   >
                     {invoice ? (
-                      <div className="flex items-center gap-3 text-[#4A3A2F] p-4 w-full">
-                        <FileText className="w-8 h-8 flex-shrink-0" />
+                      <div className="flex items-center gap-3 text-[#4A3A2F] p-4 w-full justify-center md:justify-start">
+                        <FileText className="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
                         <div className="text-left min-w-0">
-                          <span className="font-semibold block truncate">
+                          <span className="font-semibold block truncate text-sm md:text-base">
                             {invoice.name}
                           </span>
-                          <span className="block text-sm text-gray-500">
+                          <span className="block text-xs md:text-sm text-gray-500">
                             Click to change file
                           </span>
                         </div>
                       </div>
                     ) : (
                       <div className="text-center text-gray-400">
-                        <UploadCloud className="w-10 h-10 mx-auto mb-2" />
-                        <span className="font-semibold text-gray-600">
+                        <UploadCloud className="w-8 h-8 md:w-10 md:h-10 mx-auto mb-1 md:mb-2" />
+                        <span className="font-semibold text-gray-600 text-sm md:text-base block">
                           Click to upload
                         </span>
-                        <p className="text-xs">PNG & JPG only</p>
+                        <p className="text-[10px] md:text-xs">PNG & JPG only</p>
                       </div>
                     )}
                   </label>
@@ -262,7 +265,7 @@ const ClaimRewardPage = () => {
                     required
                   />
                   {fileError && (
-                    <p className="text-sm text-red-600 mt-2">{fileError}</p>
+                    <p className="text-xs md:text-sm text-red-600 mt-2">{fileError}</p>
                   )}
                 </motion.div>
 
@@ -270,9 +273,9 @@ const ClaimRewardPage = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full p-4 bg-[#4A3A2F] text-white font-bold rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full p-3 md:p-4 bg-[#4A3A2F] text-white font-bold rounded-lg md:rounded-xl hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm md:text-base"
                   >
-                    {isSubmitting && <Loader2 className="w-5 h-5 animate-spin" />}
+                    {isSubmitting && <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />}
                     {isSubmitting ? "Submitting..." : "Claim Points"}
                   </button>
                 </motion.div>
@@ -285,13 +288,13 @@ const ClaimRewardPage = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className={`mt-6 p-4 rounded-xl text-center font-semibold flex items-center justify-center gap-3 ${isSuccess ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                  className={`mt-4 md:mt-6 p-3 md:p-4 rounded-xl text-center font-semibold flex items-center justify-center gap-2 md:gap-3 text-sm md:text-base ${isSuccess ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                     }`}
                 >
                   {isSuccess ? (
-                    <CheckCircle className="w-5 h-5" />
+                    <CheckCircle className="w-4 h-4 md:w-5 md:h-5" />
                   ) : (
-                    <AlertTriangle className="w-5 h-5" />
+                    <AlertTriangle className="w-4 h-4 md:w-5 md:h-5" />
                   )}
                   <span>{submitMessage}</span>
                 </motion.div>

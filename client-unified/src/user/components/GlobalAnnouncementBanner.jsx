@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Megaphone, AlertCircle } from "lucide-react";
+import { Megaphone } from "lucide-react";
 import { getAnnouncements } from "../api/api";
 
 const GlobalAnnouncementBanner = () => {
@@ -12,11 +12,9 @@ const GlobalAnnouncementBanner = () => {
     const fetchData = async () => {
       try {
         const data = await getAnnouncements();
-        // If data exists, use it. Otherwise fallback to defaults if you want, or show nothing.
         if (data && data.length > 0) {
           setAnnouncements(data);
         } else {
-            // Optional: Fallback defaults if DB is empty
            setAnnouncements([]); 
         }
       } catch (error) {
@@ -46,42 +44,49 @@ const GlobalAnnouncementBanner = () => {
 
   return (
     <motion.section
-      className="py-3 bg-[#4A3A2F] border-b border-amber-900/50"
+      className="py-4 bg-[#4A3A2F] border-b border-amber-900/50 w-full"
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: "auto" }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-col items-center justify-center gap-3">
-        {/* <Megaphone className="w-6 h-6 text-amber-400 shrink-0 hidden md:block" /> */}
+      <div className="w-full px-4">
+        {/* Main Layout: Column in ALL views (Icon Top, Text Bottom) */}
+        <div className="flex flex-col items-center justify-center gap-2">
+          
+          {/* Component 1: Icon (Centered) */}
           <div className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-white/10 shadow-sm border border-white/5">
             <Megaphone className="w-5 h-5 text-amber-400" strokeWidth={2} />
           </div>
           
-          <div className="relative w-full max-w-2xl overflow-hidden text-center h-8 md:h-8">
+          {/* Component 2: Announcement Text (Centered) */}
+          {/* Fixed height to accommodate 2 lines of text without layout shift during animation */}
+          <div className="relative w-full max-w-3xl overflow-hidden h-12 flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentItem._id || currentIndex}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.5 }}
-                className="absolute w-full flex flex-col md:flex-row items-center justify-center gap-2"
+                className="absolute w-full flex flex-col items-center justify-center text-center"
               >
-                <span className="text-amber-200 font-bold uppercase text-sm md:text-base tracking-wide">
-                  {currentItem.title}:
+                {/* Title */}
+                <span className="text-amber-200 font-bold uppercase text-xs md:text-sm tracking-wide mb-0.5">
+                  {currentItem.title}
                 </span>
-                <span className="text-white text-sm md:text-base font-medium truncate max-w-xs md:max-w-full">
+                {/* Body */}
+                <span className="text-white text-xs md:text-sm font-medium px-4 truncate w-full">
                   {currentItem.body}
                 </span>
               </motion.div>
             </AnimatePresence>
           </div>
+
         </div>
         
-        {/* Pagination Dots (Optional, for visual cue) */}
+        {/* Pagination Dots */}
         {announcements.length > 1 && (
-            <div className="flex justify-center gap-1 mt-1">
+            <div className="flex justify-center gap-1 mt-2">
                 {announcements.map((_, idx) => (
                     <div 
                         key={idx} 

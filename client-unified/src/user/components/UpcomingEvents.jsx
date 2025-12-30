@@ -3,13 +3,13 @@ import EventCard from "./EventCard";
 import { getActiveEvents } from "../api/api";
 import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
-import "./UpcomingEvents.css"; // Import the CSS for the marquee effect
+import "./UpcomingEvents.css";
 
 const UpcomingEvents = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [animationDuration, setAnimationDuration] = useState("30s");
-  const [currentIndex, setCurrentIndex] = useState(0); // for mobile carousel
+  const [currentIndex, setCurrentIndex] = useState(0); 
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -34,8 +34,8 @@ const UpcomingEvents = () => {
   useEffect(() => {
     if (events.length === 0) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % (events.length / 2)); // Use original length
-    }, 5000); // 5 seconds
+      setCurrentIndex((prev) => (prev + 1) % (events.length / 2)); 
+    }, 5000); 
     return () => clearInterval(interval);
   }, [events]);
 
@@ -50,15 +50,17 @@ const UpcomingEvents = () => {
 
   return (
     <motion.section
-      className="py-16 bg-gray-50 overflow-x-hidden"
+      // Reduced vertical padding on mobile (py-8 vs py-16)
+      className="py-8 md:py-16 bg-gray-50 overflow-x-hidden"
       variants={sectionVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
     >
       <div className="max-w-7xl mx-auto">
-        <h2 className="flex items-center justify-center gap-3 text-4xl font-bold text-center mb-12 text-[#4A3A2F]">
-          <Calendar className="w-8 h-8 text-amber-600" /> Upcoming Events
+        {/* Scaled down heading and icon for mobile */}
+        <h2 className="flex items-center justify-center gap-2 md:gap-3 text-2xl md:text-4xl font-bold text-center mb-6 md:mb-12 text-[#4A3A2F]">
+          <Calendar className="w-6 h-6 md:w-8 md:h-8 text-amber-600" /> Upcoming Events
         </h2>
 
         {/* Desktop Marquee */}
@@ -75,20 +77,32 @@ const UpcomingEvents = () => {
           </div>
         </div>
 
-        {/* Mobile Carousel */}
-        <div className="relative w-full overflow-hidden block md:hidden">
+        {/* Mobile Carousel - Reduced container width */}
+        <div className="relative w-full overflow-hidden block md:hidden px-4">
           <motion.div
-            key={currentIndex} // re-trigger animation when index changes
-            initial={{ opacity: 0, x: 100 }}
+            key={currentIndex} 
+            initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.6 }}
-            className="flex justify-center py-4"
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.5 }}
+            className="flex justify-center py-2"
           >
-            <div className="flex-shrink-0 w-[90vw] max-w-sm">
+            <div className="flex-shrink-0 w-full max-w-sm">
               <EventCard event={events[currentIndex]} />
             </div>
           </motion.div>
+          
+          {/* Optional: Simple Dots Indicator for Mobile */}
+          <div className="flex justify-center gap-1.5 mt-4">
+            {events.slice(0, events.length / 2).map((_, idx) => (
+              <div 
+                key={idx}
+                className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
+                  idx === currentIndex ? "bg-[#4A3A2F]" : "bg-gray-300"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </motion.section>
