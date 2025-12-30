@@ -1,5 +1,4 @@
 // src/admin/api/api.js
-
 import axios from 'axios';
 import { toast } from 'sonner';
 
@@ -9,7 +8,6 @@ const adminApiClient = axios.create({
   baseURL: `${API_BASE_URL}/admin`, 
 });
 
-// Interceptor to add the auth token
 adminApiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('admin_token'); 
@@ -21,13 +19,13 @@ adminApiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+/* --- Stats & Auth --- */
 export const adminGetDashboardStats = async () => {
   try {
     const { data } = await adminApiClient.get('/stats');
     return data;
   } catch (error) {
     console.error("Stats Fetch Error:", error);
-    // Return zeros on error to prevent UI crash
     return { totalUsers: 0, totalCafes: 0, pendingCafes: 0, recentRedemptions: 0 };
   }
 };
@@ -37,7 +35,6 @@ export const checkAdminExists = async () => {
     const { data } = await adminApiClient.get('/exists');
     return data.exists;
   } catch (error) {
-    toast.error('Could not verify admin status.');
     return true; 
   }
 };
@@ -65,20 +62,28 @@ export const loginAdmin = async (credentials) => {
   }
 };
 
+/* --- Users --- */
 export const adminGetAllUsers = async () => {
   const { data } = await adminApiClient.get('/users/all');
   return data;
 };
 
 export const adminGetUserById = async (userId) => {
+  const { data } = await adminApiClient.get(`/users/${userId}`);
+  return data;
+};
+
+export const adminDeleteUser = async (userId) => {
   try {
-    const { data } = await adminApiClient.get(`/users/${userId}`);
+    const { data } = await adminApiClient.delete(`/users/${userId}`);
     return data;
   } catch (error) {
+    toast.error(error.response?.data?.error || "Failed to delete user.");
     throw error;
   }
 };
 
+/* --- Cafes --- */
 export const adminGetPendingCafes = async () => {
   const { data } = await adminApiClient.get('/cafes/pending');
   return data;
@@ -119,6 +124,17 @@ export const adminRejectCafe = async (cafeId, reason) => {
   return data;
 };
 
+export const adminDeleteCafe = async (cafeId) => {
+  try {
+    const { data } = await adminApiClient.delete(`/cafes/${cafeId}`);
+    return data;
+  } catch (error) {
+    toast.error(error.response?.data?.error || "Failed to delete cafe.");
+    throw error;
+  }
+};
+
+/* --- Events --- */
 export const adminCreateEvent = async (formData) => {
   try {
     const response = await adminApiClient.post('/events', formData, {
@@ -132,9 +148,9 @@ export const adminCreateEvent = async (formData) => {
   }
 }
 
+/* --- Claims --- */
 export const adminGetPendingClaims = async () => {
   try {
-    // ✅ Fixed: Removed hardcoded URL here too
     const res = await adminApiClient.get("/claims/pending");
     return res.data;
   } catch (err) {
@@ -165,6 +181,7 @@ export const adminRejectClaim = async (id) => {
   }
 };
 
+/* --- Announcements & Contact --- */
 export const createAnnouncement = async (data) => {
   try {
     const response = await adminApiClient.post('/announcements', data);

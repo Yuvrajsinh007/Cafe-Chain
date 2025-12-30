@@ -24,7 +24,7 @@ export default function UserProfileTabs({ user }) {
                     </div>
                     <div className="flex flex-col items-end">
                         <span className="text-amber-400 text-3xl font-bold">{totalPoints}</span>
-                        <span className="text-xs text-white/50 uppercase tracking-widest">Total XP Points</span>
+                        <span className="text-xs text-white/50 uppercase tracking-widest">Total Points</span>
                     </div>
                 </div>
                 {/* Background Decor */}

@@ -471,6 +471,45 @@ exports.testAdminEmail = async (req, res) => {
   }
 };
 
+
+exports.deleteUser = async (req, res) => {
+  try {
+      const userId = req.params.id;
+      const user = await User.findByIdAndDelete(userId);
+      
+      if (!user) {
+          return res.status(404).json({ error: "User not found" });
+      }
+      
+      // Optional: Clean up related data like Logs or RewardClaims here if needed
+      
+      res.json({ message: "User deleted successfully" });
+  } catch (err) {
+      console.error("Delete User Error:", err);
+      res.status(500).json({ error: "Server error deleting user" });
+  }
+};
+
+exports.deleteCafe = async (req, res) => {
+  try {
+      const cafeId = req.params.id;
+      const cafe = await Cafe.findByIdAndDelete(cafeId);
+      
+      if (!cafe) {
+          return res.status(404).json({ error: "Cafe not found" });
+      }
+      
+      // Optional: Delete associated Events, Offers, etc.
+      await Event.deleteMany({ cafe: cafeId });
+      await Offer.deleteMany({ cafe: cafeId });
+
+      res.json({ message: "Cafe deleted successfully" });
+  } catch (err) {
+      console.error("Delete Cafe Error:", err);
+      res.status(500).json({ error: "Server error deleting cafe" });
+  }
+};
+
 exports.getContactSubmissions = async (req, res) => {
   try {
     const submissions = await ContactUs.find({}).sort({ createdAt: -1 });
