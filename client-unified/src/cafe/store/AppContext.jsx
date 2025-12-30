@@ -64,6 +64,7 @@ function appReducer(state, action) {
         ...state,
         isAuthenticated: true,
         user: { ...action.payload },
+        cafeInfo: action.payload,
         cafeStatus: action.payload.status // critical for ProtectedRoute
       };
       saveToStorage(newState);
